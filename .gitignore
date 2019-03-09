@@ -1,0 +1,15 @@
+.idea/SpellChecker.iml
+cmake-build-debug/libSpellChecker.a
+cmake-build-debug/SpellChecker.cbp
+cmake-build-debug/CMakeFiles/SpellChecker.dir/build.make
+cmake-build-debug/CMakeFiles/SpellChecker.dir/cmake_clean.cmake
+cmake-build-debug/CMakeFiles/SpellChecker.dir/cmake_clean_target.cmake
+cmake-build-debug/CMakeFiles/SpellChecker.dir/CXX.includecache
+cmake-build-debug/CMakeFiles/SpellChecker.dir/depend.internal
+cmake-build-debug/CMakeFiles/SpellChecker.dir/depend.make
+cmake-build-debug/CMakeFiles/SpellChecker.dir/DependInfo.cmake
+cmake-build-debug/CMakeFiles/SpellChecker.dir/flags.make
+cmake-build-debug/CMakeFiles/SpellChecker.dir/link.txt
+cmake-build-debug/CMakeFiles/SpellChecker.dir/NGramSpellChecker.cpp.o
+cmake-build-debug/CMakeFiles/SpellChecker.dir/progress.make
+cmake-build-debug/CMakeFiles/SpellChecker.dir/SimpleSpellChecker.cpp.o
