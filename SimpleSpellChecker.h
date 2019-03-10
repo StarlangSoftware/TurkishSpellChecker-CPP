@@ -16,8 +16,8 @@ protected:
 private:
     vector<string> generateCandidateList(string word);
 public:
-    explicit SimpleSpellChecker(FsmMorphologicalAnalyzer& fsm);
-    Sentence* spellCheck(Sentence* sentence);
+    explicit SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm);
+    Sentence* spellCheck(Sentence* sentence) override;
 };
 
 

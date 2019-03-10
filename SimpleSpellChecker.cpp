@@ -46,13 +46,13 @@ vector<string> SimpleSpellChecker::generateCandidateList(string word) {
  * @return candidates {@link vector}.
  */
 vector<string> SimpleSpellChecker::candidateList(Word *word) {
+    vector<string> firstCandidates;
     vector<string> candidates;
-    candidates = generateCandidateList(word->getName());
-    for (int i = 0; i < candidates.size(); i++) {
-        FsmParseList fsmParseList = fsm.morphologicalAnalysis(candidates.at(i));
-        if (fsmParseList.size() == 0) {
-            candidates.erase(candidates.begin() + i);
-            i--;
+    firstCandidates = generateCandidateList(word->getName());
+    for (int i = 0; i < firstCandidates.size(); i++) {
+        FsmParseList fsmParseList = fsm.morphologicalAnalysis(firstCandidates.at(i));
+        if (fsmParseList.size() != 0) {
+            candidates.emplace_back(firstCandidates.at(i));
         }
     }
     return candidates;
@@ -64,7 +64,7 @@ vector<string> SimpleSpellChecker::candidateList(Word *word) {
  *
  * @param fsm {@link FsmMorphologicalAnalyzer} type input.
  */
-SimpleSpellChecker::SimpleSpellChecker(FsmMorphologicalAnalyzer& fsm) {
+SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm) {
     this->fsm = fsm;
 }
 

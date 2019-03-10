@@ -239,7 +239,6 @@ template<class Symbol> double NGramNode<Symbol>::getUniGramProbability(Symbol w1
  * @param w1 first gram of bigram.
  * @param w2 second gram of bigram.
  * @return probability of given bigram
- * @throws UnseenCase
  */
 template<class Symbol> double NGramNode<Symbol>::getBiGramProbability(Symbol w1, Symbol w2) {
     NGramNode<Symbol> child;
@@ -260,7 +259,6 @@ template<class Symbol> double NGramNode<Symbol>::getBiGramProbability(Symbol w1,
  * @param w2 second gram of trigram
  * @param w3 third gram of trigram
  * @return probability of given trigram.
- * @throws UnseenCase
  */
 template<class Symbol> double NGramNode<Symbol>::getTriGramProbability(Symbol w1, Symbol w2, Symbol w3) {
     NGramNode<Symbol> child;
