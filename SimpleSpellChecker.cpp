@@ -22,14 +22,14 @@ vector<string> SimpleSpellChecker::generateCandidateList(string word) {
     string s = TurkishLanguage::LOWERCASE_LETTERS;
     vector<string> candidates;
     for (int i = 0; i < Word::size(word); i++) {
-        string deleted = Word::substring(word, 0, i - 1) + Word::substring(word, i + 1, Word::size(word));
+        string deleted = Word::substring(word, 0, i) + Word::substring(word, i + 1);
         candidates.push_back(deleted);
         for (int j = 0; j < Word::size(s); j++) {
-            string replaced = Word::substring(word, 0, i - 1) + Word::charAt(s, j) + Word::substring(word, i + 1, Word::size(word));
+            string replaced = Word::substring(word, 0, i) + Word::charAt(s, j) + Word::substring(word, i + 1);
             candidates.push_back(replaced);
         }
-        for (int j = 0; j < s.length(); j++) {
-            string added = Word::substring(word, 0, i - 1) + Word::charAt(s, j) + Word::substring(word, i, Word::size(word));
+        for (int j = 0; j < Word::size(s); j++) {
+            string added = Word::substring(word, 0, i) + Word::charAt(s, j) + Word::substring(word, i);
             candidates.push_back(added);
         }
     }
