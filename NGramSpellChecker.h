@@ -14,7 +14,7 @@ private:
     NGram<string> nGram = NGram<string>(1);
 public:
     NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>& nGram);
-    Sentence* spellCheck(Sentence* sentence);
+    Sentence* spellCheck(Sentence* sentence) override;
 };
 
 
