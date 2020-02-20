@@ -10,6 +10,6 @@ int main(){
     FsmMorphologicalAnalyzer fsm;
     fsm = FsmMorphologicalAnalyzer();
     SimpleSpellChecker spellChecker = SimpleSpellChecker(fsm);
-    Sentence* s1 = new Sentence("evdı gezdık .");
+    Sentence* s1 = new Sentence("istanbulda gezdik .");
     Sentence* s2 = spellChecker.spellCheck(s1);
 }
