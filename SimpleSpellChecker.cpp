@@ -26,15 +26,17 @@ vector<string> SimpleSpellChecker::generateCandidateList(string word) {
             string swapped = Word::substring(word, 0, i) + Word::charAt(word, i + 1) + Word::charAt(word, i) + Word::substring(word, i + 2);
             candidates.push_back(swapped);
         }
-        string deleted = Word::substring(word, 0, i) + Word::substring(word, i + 1);
-        candidates.push_back(deleted);
-        for (int j = 0; j < Word::size(s); j++) {
-            string replaced = Word::substring(word, 0, i) + Word::charAt(s, j) + Word::substring(word, i + 1);
-            candidates.push_back(replaced);
-        }
-        for (int j = 0; j < Word::size(s); j++) {
-            string added = Word::substring(word, 0, i) + Word::charAt(s, j) + Word::substring(word, i);
-            candidates.push_back(added);
+        if (TurkishLanguage::LETTERS.find(Word::charAt(word, i)) != -1){
+            string deleted = Word::substring(word, 0, i) + Word::substring(word, i + 1);
+            candidates.push_back(deleted);
+            for (int j = 0; j < Word::size(s); j++) {
+                string replaced = Word::substring(word, 0, i) + Word::charAt(s, j) + Word::substring(word, i + 1);
+                candidates.push_back(replaced);
+            }
+            for (int j = 0; j < Word::size(s); j++) {
+                string added = Word::substring(word, 0, i) + Word::charAt(s, j) + Word::substring(word, i);
+                candidates.push_back(added);
+            }
         }
     }
     return candidates;
