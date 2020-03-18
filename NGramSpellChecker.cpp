@@ -34,7 +34,7 @@ NGramSpellChecker::NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>
  */
 Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
     Word* word, *bestRoot, *previousRoot = nullptr, *root;
-    string bestCandidate;
+    string bestCandidate, correctedCandidate;
     FsmParseList fsmParses;
     double probability, bestProbability;
     vector<string> candidates;
@@ -44,10 +44,14 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
         fsmParses = fsm.morphologicalAnalysis(word->getName());
         if (fsmParses.size() == 0) {
             candidates = candidateList(word);
-            bestCandidate = "";
-            bestRoot = nullptr;
+            bestCandidate = word->getName();
+            bestRoot = word;
             bestProbability = 0;
             for (const string &candidate : candidates) {
+                correctedCandidate = fsm.getDictionary().getCorrectForm(candidate);
+                if (correctedCandidate.empty()){
+                    correctedCandidate = candidate;
+                }
                 fsmParses = fsm.morphologicalAnalysis(candidate);
                 root = fsmParses.getFsmParse(0).getWord();
                 if (previousRoot != nullptr) {
