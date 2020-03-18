@@ -10,6 +10,6 @@ int main(){
     FsmMorphologicalAnalyzer fsm;
     fsm = FsmMorphologicalAnalyzer();
     SimpleSpellChecker spellChecker = SimpleSpellChecker(fsm);
-    Sentence* s1 = new Sentence("bak-ştık .");
+    Sentence* s1 = new Sentence("yagmurlik");
     Sentence* s2 = spellChecker.spellCheck(s1);
 }

@@ -59,6 +59,11 @@ vector<string> SimpleSpellChecker::candidateList(Word *word) {
         FsmParseList fsmParseList = fsm.morphologicalAnalysis(firstCandidates.at(i));
         if (fsmParseList.size() != 0) {
             candidates.emplace_back(firstCandidates.at(i));
+        } else {
+            string newCandidate = fsm.getDictionary().getCorrectForm(firstCandidates.at(i));
+            if (!newCandidate.empty()){
+                candidates.emplace_back(newCandidate);
+            }
         }
     }
     return candidates;
