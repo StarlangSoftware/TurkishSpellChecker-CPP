@@ -64,8 +64,8 @@ SpellChecker finds spelling errors and corrects them in Turkish. There are two t
     
     * To instantiate this, a `FsmMorphologicalAnalyzer` is needed. 
         
-            FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer();
-            SpellChecker spellChecker = new SimpleSpellChecker(fsm);   
+            FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
+            SpellChecker spellChecker = SimpleSpellChecker(fsm);   
      
 * `NGramSpellChecker`,
     
@@ -73,15 +73,15 @@ SpellChecker finds spelling errors and corrects them in Turkish. There are two t
     
     * `FsmMorphologicalAnalyzer` can be instantiated as follows:
         
-            FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer();
+            FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
     
     * `NGram` can be either trained from scratch or loaded from an existing model.
         
         * Training from scratch:
                 
-                Corpus corpus = new Corpus("corpus.txt"); 
-                NGram ngram = new NGram(corpus.getAllWordsAsArrayList(), 1);
-                ngram.calculateNGramProbabilities(new LaplaceSmoothing());
+                Corpus corpus = Corpus("corpus.txt"); 
+                NGram ngram = NGram(corpus.getAllWordsAsArrayList(), 1);
+                ngram.calculateNGramProbabilities(LaplaceSmoothing());
                 
         *There are many smoothing methods available. For other smoothing methods, check [here](https://github.com/olcaytaner/NGram).*       
         * Loading from an existing model:
@@ -92,16 +92,16 @@ SpellChecker finds spelling errors and corrects them in Turkish. There are two t
             
     * Afterwards, `NGramSpellChecker` can be created as below:
         
-            SpellChecker spellChecker = new NGramSpellChecker(fsm, ngram);
+            SpellChecker spellChecker = NGramSpellChecker(fsm, ngram);
      
 
 ## Spell Correction
 
 Spell correction can be done as follows:
 
-    Sentence sentence = new Sentence("Dıktor olaç yazdı");
-    Sentence corrected = spellChecker.spellCheck(sentence);
-    System.out.println(corrected);
+    Sentence* sentence = new Sentence("Dıktor olaç yazdı");
+    Sentence* corrected = spellChecker.spellCheck(sentence);
+    cout << corrected;
     
 Output:
 
