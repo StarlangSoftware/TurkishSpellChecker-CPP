@@ -65,7 +65,7 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
             result->addWord(new Word(bestCandidate));
         } else {
             result->addWord(word);
-            previousRoot = fsmParses.getFsmParse(0).getWord();
+            previousRoot = fsmParses.getParseWithLongestRootWord().getWord();
         }
     }
     return result;
