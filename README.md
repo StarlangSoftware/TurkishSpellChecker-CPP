@@ -4,8 +4,9 @@ This tool is a spelling checker for Modern Turkish. It detects spelling errors a
 
 For Developers
 ============
-You can also see either [Python](https://github.com/olcaytaner/TurkishSpellChecker-Py) 
-or [Java](https://github.com/olcaytaner/TurkishSpellChecker) repository.
+
+You can also see [Java](https://github.com/starlangsoftware/TurkishSpellChecker), [Python](https://github.com/starlangsoftware/TurkishSpellChecker-Py), or [C#](https://github.com/starlangsoftware/TurkishSpellChecker-CS) repository.
+
 ## Requirements
 
 * [C++ Compiler](#cpp)
