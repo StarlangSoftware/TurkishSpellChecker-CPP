@@ -31,7 +31,7 @@ Use Git for cloning the code to your local or below line for Ubuntu:
 
 A directory called TurkishSpellChecker-CPP will be created. Or you can use below link for exploring the code:
 
-	git clone https://github.com/olcaytaner/TurkishSpellChecker-CPP.git
+	git clone https://github.com/starlangsoftware/TurkishSpellChecker-CPP.git
 
 ## Open project with CLion IDE
 
@@ -89,7 +89,7 @@ SpellChecker finds spelling errors and corrects them in Turkish. There are two t
      
                 NGram ngram = NGram("ngram.txt");
 
-	*For further details, please check [here](https://github.com/olcaytaner/NGram).*        
+	*For further details, please check [here](https://github.com/starlangsoftware/NGram).*        
             
     * Afterwards, `NGramSpellChecker` can be created as below:
         
