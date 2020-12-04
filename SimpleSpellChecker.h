@@ -12,11 +12,11 @@
 class SimpleSpellChecker : public SpellChecker {
 protected:
     FsmMorphologicalAnalyzer fsm;
-    vector<string> candidateList(Word* word);
 private:
     vector<string> generateCandidateList(string word);
 public:
     explicit SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm);
+    vector<string> candidateList(Word* word);
     Sentence* spellCheck(Sentence* sentence) override;
 };
 

@@ -12,8 +12,9 @@
 class NGramSpellChecker : public SimpleSpellChecker {
 private:
     NGram<string> nGram = NGram<string>(1);
+    bool rootNGram = false;
 public:
-    NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>& nGram);
+    NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>& nGram, bool rootNGram);
     Word* checkAnalysisAndSetRoot(Sentence* sentence, int index);
     Sentence* spellCheck(Sentence* sentence) override;
 };

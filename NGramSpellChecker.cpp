@@ -12,8 +12,9 @@
  * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
  * @param nGram {@link NGram} type input.
  */
-NGramSpellChecker::NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>& nGram) : SimpleSpellChecker(fsm) {
+NGramSpellChecker::NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>& nGram, bool rootNGram) : SimpleSpellChecker(fsm) {
     this->nGram = nGram;
+    this->rootNGram = rootNGram;
 }
 
 /**
@@ -50,7 +51,11 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
             bestProbability = 0;
             for (const string &candidate : candidates) {
                 fsmParses = fsm.morphologicalAnalysis(candidate);
-                root = fsmParses.getParseWithLongestRootWord().getWord();
+                if (rootNGram){
+                    root = fsmParses.getParseWithLongestRootWord().getWord();
+                } else {
+                    root = new Word(candidate);
+                }
                 if (previousRoot != nullptr) {
                     previousProbability = nGram.getProbability({previousRoot->getName(), root->getName()});
                 } else {
@@ -90,7 +95,11 @@ Word *NGramSpellChecker::checkAnalysisAndSetRoot(Sentence *sentence, int index) 
     if (index < sentence->wordCount()){
         FsmParseList fsmParses = fsm.morphologicalAnalysis(sentence->getWord(index)->getName());
         if (fsmParses.size() != 0){
-            return fsmParses.getParseWithLongestRootWord().getWord();
+            if (rootNGram){
+                return fsmParses.getParseWithLongestRootWord().getWord();
+            } else {
+                return sentence->getWord(index);
+            }
         }
     }
     return nullptr;
