@@ -17,6 +17,10 @@ NGramSpellChecker::NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>
     this->rootNGram = rootNGram;
 }
 
+void NGramSpellChecker::setThreshold(double threshold) {
+    this->threshold = threshold;
+}
+
 /**
  * The spellCheck method takes a {@link Sentence} as an input and loops i times where i ranges from 0 to size of words in given sentence.
  * Then, it calls morphologicalAnalysis method with each word and assigns it to the {@link FsmParseList}, if the size of
@@ -48,7 +52,7 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
             candidates = candidateList(word);
             bestCandidate = word->getName();
             bestRoot = word;
-            bestProbability = 0;
+            bestProbability = this->threshold;
             for (const string &candidate : candidates) {
                 fsmParses = fsm.morphologicalAnalysis(candidate);
                 if (rootNGram){
