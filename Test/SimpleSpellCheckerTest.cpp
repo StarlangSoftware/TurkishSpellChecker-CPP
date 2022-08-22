@@ -6,7 +6,7 @@
 
 #include <FsmMorphologicalAnalyzer.h>
 #include "catch.hpp"
-#include "../SimpleSpellChecker.h"
+#include "../src/SimpleSpellChecker.h"
 
 TEST_CASE("SimpleSpellCheckerTest-testSpellCheck") {
     FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();

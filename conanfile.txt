@@ -1,0 +1,6 @@
+[requires]
+MorphologicalAnalysis/1.0.0
+NGram/1.0.0
+
+[generators]
+cmake

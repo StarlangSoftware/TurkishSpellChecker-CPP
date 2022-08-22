@@ -5,7 +5,7 @@
 #include <FsmMorphologicalAnalyzer.h>
 #include <NoSmoothing.h>
 #include "catch.hpp"
-#include "../NGramSpellChecker.h"
+#include "../src/NGramSpellChecker.h"
 
 TEST_CASE("NGramSpellCheckerTest-testSpellCheck") {
     FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
