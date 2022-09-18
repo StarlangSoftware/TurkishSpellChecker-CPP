@@ -46,6 +46,39 @@ TEST_CASE("NGramSpellCheckerTest-testSpellCheck") {
     }
 }
 
+TEST_CASE("NGramSpellCheckerTest-testSpellCheck2") {
+    FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
+    auto* nGram = new NGram<string>("ngram.txt");
+    NoSmoothing<string> noSmoothing;
+    noSmoothing.setProbabilities(*nGram);
+    Sentence* original[] = {new Sentence("yeni sezon başladı"),
+                            new Sentence("sırtıkara adındaki canlı, bir balıktır"),
+                            new Sentence("siyah ayı , ayıgiller familyasına ait bir ayı türüdür"),
+                            new Sentence("yeni sezon başladı gibi"),
+                            new Sentence("alışveriş için markete gitti"),
+                            new Sentence("küçük bir yalıçapkını geçti"),
+                            new Sentence("meslek odaları birliği yeniden toplandı"),
+                            new Sentence("yeni yılın sonrasında vakalarda artış oldu"),
+                            new Sentence("atomik saatin 10 mhz sinyali kalibrasyon hizmetlerinde referans olarak kullanılmaktadır"),
+                            new Sentence("rehberimiz bu bölgedeki çıngıraklı yılan varlığı hakkında konuştu"),
+                            new Sentence("bu son model cihaz 24 inç ekran büyüklüğünde ve 9 kg ağırlıktadır")};
+    Sentence* modified[] = {new Sentence("yenisezon başladı"),
+                            new Sentence("sırtı kara adındaki canlı, bir balıktır"),
+                            new Sentence("siyahayı , ayıgiller familyasına ait bir ayı türüdür"),
+                            new Sentence("yeni se zon başladı gibs"),
+                            new Sentence("alis veriş için markete gitit"),
+                            new Sentence("kucuk bri yalı çapkını gecti"),
+                            new Sentence("mes lek odaları birliği yendien toplandı"),
+                            new Sentence("yeniyılın sonrasında vakalarda artış oldu"),
+                            new Sentence("atomik saatin 10mhz sinyali kalibrasyon hizmetlerinde referans olarka kullanılmaktadır"),
+                            new Sentence("rehperimiz buı bölgedeki çıngıraklıyılan varlıgı hakkınd konustu"),
+                            new Sentence("bu sno model ciha 24inç ekran büyüklüğünde ve 9kg ağırlıktadır")};
+    NGramSpellChecker nGramSpellChecker = NGramSpellChecker(fsm, *nGram, true);
+    for (int i = 0; i < 11; i++){
+        REQUIRE(original[i]->to_string() == nGramSpellChecker.spellCheck(modified[i])->to_string());
+    }
+}
+
 TEST_CASE("NGramSpellCheckerTest-testSpellCheckSurfaceForm") {
     FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
     auto *nGram = new NGram<string>("ngram.txt");
