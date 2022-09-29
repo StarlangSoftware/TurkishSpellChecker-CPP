@@ -18,7 +18,7 @@ private:
     Word* checkAnalysisAndSetRoot(string word);
     double getProbability(string word1, string word2);
 public:
-    NGramSpellChecker(FsmMorphologicalAnalyzer fsm, NGram<string>& nGram, bool rootNGram);
+    NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, const NGram<string>& nGram, bool rootNGram);
     void setThreshold(double threshold);
     Sentence* spellCheck(Sentence* sentence) override;
 };

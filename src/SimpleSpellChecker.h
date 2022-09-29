@@ -22,6 +22,7 @@ protected:
     bool forcedShortcutCheck(Word* word, Sentence* result, Word* previousWord);
     vector<Candidate*> mergedCandidatesList(Word* previousWord, Word* word, Word* nextWord);
     vector<Candidate*> splitCandidatesList(Word* word);
+    void addSplitWords(string multiWord, Sentence* result);
 private:
     vector<Candidate*> generateCandidateList(string word);
     unordered_map<string, string> mergedWords;

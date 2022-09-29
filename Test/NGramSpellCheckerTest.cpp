@@ -61,7 +61,7 @@ TEST_CASE("NGramSpellCheckerTest-testSpellCheck2") {
                             new Sentence("rehberimiz bu bölgedeki çıngıraklı yılan varlığı hakkında konuştu"),
                             new Sentence("bu son model cihaz 24 inç ekran büyüklüğünde ve 9 kg ağırlıktadır")};
     Sentence* modified[] = {new Sentence("yenisezon başladı"),
-                            new Sentence("sırtı kara adındaki canlı, bir balıktır"),
+                            new Sentence("sırtı kara adındaki canlı , bir balıktır"),
                             new Sentence("siyahayı , ayıgiller familyasına ait bir ayı türüdür"),
                             new Sentence("yeni se zon başladı gibs"),
                             new Sentence("alis veriş için markete gitit"),

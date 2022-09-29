@@ -103,60 +103,54 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
     unsigned long randomCandidate;
     vector<Candidate*> candidates;
     auto* result = new Sentence();
-    for (int repeat = 0; repeat < 2; repeat++){
-        for (int i = 0; i < sentence->wordCount(); i++) {
-            word = sentence->getWord(i);
-            Word* nextWord = nullptr;
-            Word* previousWord = nullptr;
-            if (i > 0){
-                previousWord = sentence->getWord(i - 1);
+    for (int i = 0; i < sentence->wordCount(); i++) {
+        word = sentence->getWord(i);
+        Word* nextWord = nullptr;
+        Word* previousWord = nullptr;
+        if (i > 0){
+            previousWord = sentence->getWord(i - 1);
+        }
+        if (i < sentence->wordCount() - 1){
+            nextWord = sentence->getWord(i + 1);
+        }
+        if (forcedMisspellCheck(word, result) || forcedBackwardMergeCheck(word, result, previousWord)){
+            continue;
+        }
+        if (forcedForwardMergeCheck(word, result, nextWord)){
+            i++;
+            continue;
+        }
+        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result, previousWord)){
+            continue;
+        }
+        FsmParseList fsmParseList = fsm.morphologicalAnalysis(word->getName());
+        if (fsmParseList.size() == 0) {
+            candidates = candidateList(word);
+            if (candidates.empty()) {
+                vector<Candidate*> mergedCandidates = mergedCandidatesList(previousWord, word, nextWord);
+                candidates.insert(candidates.end(), mergedCandidates.begin(), mergedCandidates.end());
             }
-            if (i < sentence->wordCount() - 1){
-                nextWord = sentence->getWord(i + 1);
+            if (candidates.empty()) {
+                vector<Candidate*> splitCandidates = splitCandidatesList(word);
+                candidates.insert(candidates.cend(), splitCandidates.begin(), splitCandidates.end());
             }
-            if (forcedMisspellCheck(word, result) || forcedBackwardMergeCheck(word, result, previousWord)){
-                continue;
-            }
-            if (forcedForwardMergeCheck(word, result, nextWord)){
-                i++;
-                continue;
-            }
-            if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result, previousWord)){
-                continue;
-            }
-            FsmParseList fsmParseList = fsm.morphologicalAnalysis(word->getName());
-            if (fsmParseList.size() == 0) {
-                candidates = candidateList(word);
-                if (candidates.empty()) {
-                    vector<Candidate*> mergedCandidates = mergedCandidatesList(previousWord, word, nextWord);
-                    candidates.insert(candidates.end(), mergedCandidates.begin(), mergedCandidates.end());
+            if (!candidates.empty()) {
+                randomCandidate = random() % candidates.size();
+                newWord = new Word(candidates.at(randomCandidate)->getName());
+                if (candidates[randomCandidate]->getOperator() == Operator::BACKWARD_MERGE){
+                    result->replaceWord(i - 1, newWord);
+                    continue;
                 }
-                if (candidates.empty()) {
-                    vector<Candidate*> splitCandidates = splitCandidatesList(word);
-                    candidates.insert(candidates.cend(), splitCandidates.begin(), splitCandidates.end());
-                }
-                if (!candidates.empty()) {
-                    randomCandidate = random() % candidates.size();
-                    newWord = new Word(candidates.at(randomCandidate)->getName());
-                    if (candidates[randomCandidate]->getOperator() == Operator::BACKWARD_MERGE){
-                        result->replaceWord(i - 1, newWord);
-                        continue;
-                    }
-                    if (candidates[randomCandidate]->getOperator() == Operator::FORWARD_MERGE){
-                        i++;
-                    }
-                } else {
-                    newWord = word;
+                if (candidates[randomCandidate]->getOperator() == Operator::FORWARD_MERGE){
+                    i++;
                 }
             } else {
                 newWord = word;
             }
-            result->addWord(newWord);
+        } else {
+            newWord = word;
         }
-        sentence = result;
-        if (repeat < 1){
-            result = new Sentence();
-        }
+        result->addWord(newWord);
     }
     return result;
 }
@@ -234,11 +228,6 @@ bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result, Word*
         shortcutRegex += "|" + shortcuts[i];
     }
     shortcutRegex += ")";
-    if (std::find(shortcuts.begin(), shortcuts.end(), word->getName()) != shortcuts.end()
-    && regex_search(previousWord->getName(), regex("[0-9]+"))){
-        result->addWord(word);
-        return true;
-    }
     if (regex_search(word->getName(), regex(shortcutRegex))){
         pair<string, string> pair = getSplitPair(word);
         forcedReplacement = pair.first + " " + pair.second;
@@ -300,4 +289,10 @@ pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) {
     pair.first = first;
     pair.second = second;
     return pair;
+}
+
+void SimpleSpellChecker::addSplitWords(string multiWord, Sentence *result) {
+    vector<string> words = Word::split(multiWord);
+    result->addWord(new Word(words[0]));
+    result->addWord(new Word(words[1]));
 }
