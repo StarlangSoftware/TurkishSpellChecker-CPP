@@ -50,7 +50,7 @@ TEST_CASE("NGramSpellCheckerTest-testSpellCheck2") {
     NoSmoothing<string> noSmoothing;
     noSmoothing.setProbabilities(*nGram);
     Sentence* original[] = {new Sentence("yeni sezon başladı"),
-                            new Sentence("sırtıkara adındaki canlı, bir balıktır"),
+                            new Sentence("sırtıkara adındaki canlı , bir balıktır"),
                             new Sentence("siyah ayı , ayıgiller familyasına ait bir ayı türüdür"),
                             new Sentence("yeni sezon başladı gibi"),
                             new Sentence("alışveriş için markete gitti"),
