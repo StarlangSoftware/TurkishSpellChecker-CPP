@@ -60,13 +60,14 @@ vector<Candidate*> SimpleSpellChecker::generateCandidateList(string word) {
 vector<Candidate*> SimpleSpellChecker::candidateList(Word *word) {
     vector<Candidate*> firstCandidates;
     vector<Candidate*> candidates;
+    TxtDictionary dictionary = fsm.getDictionary();
     firstCandidates = generateCandidateList(word->getName());
     for (int i = 0; i < firstCandidates.size(); i++) {
         FsmParseList fsmParseList = fsm.morphologicalAnalysis(firstCandidates.at(i)->getName());
         if (fsmParseList.size() != 0) {
             candidates.emplace_back(firstCandidates.at(i));
         } else {
-            string newCandidate = fsm.getDictionary().getCorrectForm(firstCandidates.at(i)->getName());
+            string newCandidate = dictionary.getCorrectForm(firstCandidates.at(i)->getName());
             if (!newCandidate.empty()){
                 candidates.emplace_back(new Candidate(newCandidate, Operator::MISSPELLED_REPLACE));
             }
@@ -144,6 +145,10 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
                 if (candidates[randomCandidate]->getOperator() == Operator::FORWARD_MERGE){
                     i++;
                 }
+                if (candidates[randomCandidate]->getOperator() == Operator::SPLIT){
+                    addSplitWords(candidates[randomCandidate]->getName(), result);
+                    continue;
+                }
             } else {
                 newWord = word;
             }
@@ -215,14 +220,13 @@ bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, W
 bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) {
     string forcedReplacement = getCorrectForm(word->getName(), splitWords);
     if (!forcedReplacement.empty()){
-        result->addWord(new Word(forcedReplacement));
+        addSplitWords(forcedReplacement, result);
         return true;
     }
     return false;
 }
 
 bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result, Word* previousWord) {
-    string forcedReplacement;
     string shortcutRegex = "[0-9]+(" + shortcuts[0];
     for (int i = 1; i < shortcuts.size(); i++){
         shortcutRegex += "|" + shortcuts[i];
@@ -230,8 +234,8 @@ bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result, Word*
     shortcutRegex += ")";
     if (regex_search(word->getName(), regex(shortcutRegex))){
         pair<string, string> pair = getSplitPair(word);
-        forcedReplacement = pair.first + " " + pair.second;
-        result->addWord(new Word(forcedReplacement));
+        result->addWord(new Word(pair.first));
+        result->addWord(new Word(pair.second));
         return true;
     }
     return false;
@@ -262,7 +266,7 @@ vector<Candidate *> SimpleSpellChecker::mergedCandidatesList(Word *previousWord,
 
 vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
     vector<Candidate*> splitCandidates;
-    for (int i = 4; i < word->getName().length() - 3; i++) {
+    for (int i = 4; i < Word::size(word->getName()) - 3; i++) {
         string firstPart = Word::substring(word->getName(), 0, i);
         string secondPart = Word::substring(word->getName(), i);
         FsmParseList fsmParseListFirst = fsm.morphologicalAnalysis(firstPart);
@@ -278,7 +282,7 @@ pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) {
     pair<string, string> pair;
     string first;
     int j;
-    for (j = 0; j < word->getName().length(); j++){
+    for (j = 0; j < Word::size(word->getName()); j++){
         if (Word::charAt(word->getName(), j) >= "0" && Word::charAt(word->getName(), j) <= "9") {
             first += Word::charAt(word->getName(), j);
         } else {
