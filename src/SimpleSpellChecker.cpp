@@ -126,10 +126,9 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
         }
         FsmParseList fsmParseList = fsm.morphologicalAnalysis(word->getName());
         if (fsmParseList.size() == 0) {
-            candidates = candidateList(word);
+            candidates = mergedCandidatesList(previousWord, word, nextWord);
             if (candidates.empty()) {
-                vector<Candidate*> mergedCandidates = mergedCandidatesList(previousWord, word, nextWord);
-                candidates.insert(candidates.end(), mergedCandidates.begin(), mergedCandidates.end());
+                candidates = candidateList(word);
             }
             if (candidates.empty()) {
                 vector<Candidate*> splitCandidates = splitCandidatesList(word);
