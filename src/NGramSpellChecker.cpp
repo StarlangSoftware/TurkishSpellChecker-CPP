@@ -102,15 +102,17 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
                 if (candidate->getOperator() == Operator::SPELL_CHECK || candidate->getOperator() == Operator::MISSPELLED_REPLACE){
                     root = checkAnalysisAndSetRoot(candidate->getName());
                 }
-                if (candidate->getOperator() == Operator::BACKWARD_MERGE
-                    && previousWord != nullptr && previousPreviousWord != nullptr){
+                if (candidate->getOperator() == Operator::BACKWARD_MERGE && previousWord != nullptr){
                     root = checkAnalysisAndSetRoot(previousWord->getName() + word->getName());
-                    previousRoot = checkAnalysisAndSetRoot(previousPreviousWord->getName());
+                    if (previousPreviousWord != nullptr){
+                        previousRoot = checkAnalysisAndSetRoot(previousPreviousWord->getName());
+                    }
                 }
-                if (candidate->getOperator() == Operator::FORWARD_MERGE
-                    && nextWord != nullptr && nextNextWord != nullptr){
+                if (candidate->getOperator() == Operator::FORWARD_MERGE && nextWord != nullptr){
                     root = checkAnalysisAndSetRoot(word->getName() + nextWord->getName());
-                    nextRoot = checkAnalysisAndSetRoot(nextNextWord->getName());
+                    if (nextNextWord != nullptr){
+                        nextRoot = checkAnalysisAndSetRoot(nextNextWord->getName());
+                    }
                 }
                 if (previousRoot != nullptr) {
                     if (candidate->getOperator() == Operator::SPLIT){
