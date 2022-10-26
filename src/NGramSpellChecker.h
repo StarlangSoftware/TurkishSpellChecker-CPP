@@ -15,11 +15,11 @@ private:
     bool rootNGram = false;
     double threshold = 0.0;
     Word* checkAnalysisAndSetRootForWordAtIndex(Sentence* sentence, int index);
-    Word* checkAnalysisAndSetRoot(string word);
-    double getProbability(string word1, string word2);
+    Word* checkAnalysisAndSetRoot(const string& word);
+    double getProbability(const string& word1, const string& word2) const;
 public:
     NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, const NGram<string>& nGram, bool rootNGram);
-    void setThreshold(double threshold);
+    void setThreshold(double _threshold);
     Sentence* spellCheck(Sentence* sentence) override;
 };
 

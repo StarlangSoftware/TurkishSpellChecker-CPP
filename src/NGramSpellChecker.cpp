@@ -17,8 +17,8 @@ NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, const 
     this->rootNGram = rootNGram;
 }
 
-void NGramSpellChecker::setThreshold(double threshold) {
-    this->threshold = threshold;
+void NGramSpellChecker::setThreshold(double _threshold) {
+    this->threshold = _threshold;
 }
 
 /**
@@ -83,7 +83,7 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
             continue;
         }
-        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result, previousWord)){
+        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result)){
             previousRoot = checkAnalysisAndSetRootForWordAtIndex(result, result->wordCount() - 1);
             root = nextRoot;
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
@@ -180,7 +180,7 @@ Word *NGramSpellChecker::checkAnalysisAndSetRootForWordAtIndex(Sentence *sentenc
     return nullptr;
 }
 
-Word *NGramSpellChecker::checkAnalysisAndSetRoot(string word) {
+Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string& word){
     FsmParseList fsmParses = fsm.morphologicalAnalysis(word);
     if (fsmParses.size() != 0){
         if (rootNGram){
@@ -192,6 +192,6 @@ Word *NGramSpellChecker::checkAnalysisAndSetRoot(string word) {
     return nullptr;
 }
 
-double NGramSpellChecker::getProbability(string word1, string word2) {
+double NGramSpellChecker::getProbability(const string& word1, const string& word2) const{
     return nGram.getProbability({word1, word2});
 }

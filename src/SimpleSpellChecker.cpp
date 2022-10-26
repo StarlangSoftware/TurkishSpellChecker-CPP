@@ -23,7 +23,7 @@ const vector<string> SimpleSpellChecker::shortcuts = {"cc", "cm2", "cm", "gb", "
  * @param word String input.
  * @return vector candidates.
  */
-vector<Candidate*> SimpleSpellChecker::generateCandidateList(string word) {
+vector<Candidate*> SimpleSpellChecker::generateCandidateList(const string& word) const{
     string s = TurkishLanguage::LOWERCASE_LETTERS;
     vector<Candidate*> candidates;
     string englishCharacters = "wqx";
@@ -57,17 +57,17 @@ vector<Candidate*> SimpleSpellChecker::generateCandidateList(string word) {
  * @param word Word input.
  * @return candidates {@link vector}.
  */
-vector<Candidate*> SimpleSpellChecker::candidateList(Word *word) {
+vector<Candidate*> SimpleSpellChecker::candidateList(Word *word){
     vector<Candidate*> firstCandidates;
     vector<Candidate*> candidates;
     TxtDictionary dictionary = fsm.getDictionary();
     firstCandidates = generateCandidateList(word->getName());
-    for (int i = 0; i < firstCandidates.size(); i++) {
-        FsmParseList fsmParseList = fsm.morphologicalAnalysis(firstCandidates.at(i)->getName());
+    for (auto & firstCandidate : firstCandidates) {
+        FsmParseList fsmParseList = fsm.morphologicalAnalysis(firstCandidate->getName());
         if (fsmParseList.size() != 0) {
-            candidates.emplace_back(firstCandidates.at(i));
+            candidates.emplace_back(firstCandidate);
         } else {
-            string newCandidate = dictionary.getCorrectForm(firstCandidates.at(i)->getName());
+            string newCandidate = dictionary.getCorrectForm(firstCandidate->getName());
             if (!newCandidate.empty()){
                 candidates.emplace_back(new Candidate(newCandidate, Operator::MISSPELLED_REPLACE));
             }
@@ -121,7 +121,7 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
             i++;
             continue;
         }
-        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result, previousWord)){
+        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result)){
             continue;
         }
         FsmParseList fsmParseList = fsm.morphologicalAnalysis(word->getName());
@@ -178,7 +178,7 @@ void SimpleSpellChecker::loadDictionaries() {
     inputStream.close();
 }
 
-bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) {
+bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) const{
     string forcedReplacement = fsm.getDictionary().getCorrectForm(word->getName());
     if (!forcedReplacement.empty()){
         result->addWord(new Word(forcedReplacement));
@@ -187,7 +187,7 @@ bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) {
     return false;
 }
 
-bool SimpleSpellChecker::forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) {
+bool SimpleSpellChecker::forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) const{
     if (previousWord != nullptr){
         string forcedReplacement = getCorrectForm(result->getWord(result->wordCount() - 1)->getName() + " " + word->getName(), mergedWords);
         if (!forcedReplacement.empty()) {
@@ -198,14 +198,14 @@ bool SimpleSpellChecker::forcedBackwardMergeCheck(Word* word, Sentence* result, 
     return false;
 }
 
-string SimpleSpellChecker::getCorrectForm(const string& wordName, unordered_map<string, string> dictionary) {
+string SimpleSpellChecker::getCorrectForm(const string& wordName, const unordered_map<string, string>& dictionary) const{
     if (dictionary.contains(wordName)){
         return dictionary.at(wordName);
     }
     return "";
 }
 
-bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, Word *nextWord) {
+bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, Word *nextWord) const{
     if (nextWord != nullptr){
         string forcedReplacement = getCorrectForm(word->getName() + " " + nextWord->getName(), mergedWords);
         if (!forcedReplacement.empty()) {
@@ -216,7 +216,7 @@ bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, W
     return false;
 }
 
-bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) {
+bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) const{
     string forcedReplacement = getCorrectForm(word->getName(), splitWords);
     if (!forcedReplacement.empty()){
         addSplitWords(forcedReplacement, result);
@@ -225,7 +225,7 @@ bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) {
     return false;
 }
 
-bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result, Word* previousWord) {
+bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result) const{
     string shortcutRegex = "[0-9]+(" + shortcuts[0];
     for (int i = 1; i < shortcuts.size(); i++){
         shortcutRegex += "|" + shortcuts[i];
@@ -277,7 +277,7 @@ vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
     return splitCandidates;
 }
 
-pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) {
+pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
     pair<string, string> pair;
     string first;
     int j;
@@ -294,7 +294,7 @@ pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) {
     return pair;
 }
 
-void SimpleSpellChecker::addSplitWords(string multiWord, Sentence *result) {
+void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result) const{
     vector<string> words = Word::split(multiWord);
     result->addWord(new Word(words[0]));
     result->addWord(new Word(words[1]));

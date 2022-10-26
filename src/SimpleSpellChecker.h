@@ -14,22 +14,22 @@
 class SimpleSpellChecker : public SpellChecker {
 protected:
     FsmMorphologicalAnalyzer fsm;
-    bool forcedMisspellCheck(Word* word, Sentence* result);
-    bool forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord);
-    bool forcedForwardMergeCheck(Word* word, Sentence* result, Word* nextWord);
-    string getCorrectForm(const string& wordName, unordered_map<string, string> dictionary);
-    bool forcedSplitCheck(Word* word, Sentence* result);
-    bool forcedShortcutCheck(Word* word, Sentence* result, Word* previousWord);
+    bool forcedMisspellCheck(Word* word, Sentence* result) const;
+    bool forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) const;
+    bool forcedForwardMergeCheck(Word* word, Sentence* result, Word* nextWord) const;
+    string getCorrectForm(const string& wordName, const unordered_map<string, string>& dictionary) const;
+    bool forcedSplitCheck(Word* word, Sentence* result) const;
+    bool forcedShortcutCheck(Word* word, Sentence* result) const;
     vector<Candidate*> mergedCandidatesList(Word* previousWord, Word* word, Word* nextWord);
     vector<Candidate*> splitCandidatesList(Word* word);
-    void addSplitWords(string multiWord, Sentence* result);
+    void addSplitWords(const string& multiWord, Sentence* result) const;
 private:
-    vector<Candidate*> generateCandidateList(string word);
+    vector<Candidate*> generateCandidateList(const string& word) const;
     unordered_map<string, string> mergedWords;
     unordered_map<string, string> splitWords;
     static const vector<string> shortcuts;
     void loadDictionaries();
-    pair<string, string> getSplitPair(Word* word);
+    pair<string, string> getSplitPair(Word* word) const;
 public:
     explicit SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm);
     vector<Candidate*> candidateList(Word* word);

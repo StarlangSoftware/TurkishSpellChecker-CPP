@@ -15,8 +15,8 @@ class Candidate : public Word{
 private:
     Operator op;
 public:
-    Candidate(string candidate, Operator op);
-    Operator getOperator();
+    Candidate(const string& candidate, Operator op);
+    Operator getOperator() const;
 };
 
 

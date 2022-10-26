@@ -4,10 +4,10 @@
 
 #include "Candidate.h"
 
-Candidate::Candidate(string candidate, Operator op) : Word(candidate){
+Candidate::Candidate(const string& candidate, Operator op) : Word(candidate){
     this->op = op;
 }
 
-Operator Candidate::getOperator() {
+Operator Candidate::getOperator() const{
     return op;
 }
