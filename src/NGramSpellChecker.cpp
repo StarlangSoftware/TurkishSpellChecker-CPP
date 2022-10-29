@@ -12,7 +12,7 @@
  * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
  * @param nGram {@link NGram} type input.
  */
-NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, const NGram<string>& nGram, bool rootNGram) : SimpleSpellChecker(fsm) {
+NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<string>* nGram, bool rootNGram) : SimpleSpellChecker(fsm) {
     this->nGram = nGram;
     this->rootNGram = rootNGram;
 }
@@ -193,5 +193,5 @@ Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string& word){
 }
 
 double NGramSpellChecker::getProbability(const string& word1, const string& word2) const{
-    return nGram.getProbability({word1, word2});
+    return nGram->getProbability({word1, word2});
 }

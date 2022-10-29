@@ -60,14 +60,14 @@ vector<Candidate*> SimpleSpellChecker::generateCandidateList(const string& word)
 vector<Candidate*> SimpleSpellChecker::candidateList(Word *word){
     vector<Candidate*> firstCandidates;
     vector<Candidate*> candidates;
-    TxtDictionary dictionary = fsm.getDictionary();
+    TxtDictionary* dictionary = fsm.getDictionary();
     firstCandidates = generateCandidateList(word->getName());
     for (auto & firstCandidate : firstCandidates) {
         FsmParseList fsmParseList = fsm.morphologicalAnalysis(firstCandidate->getName());
         if (fsmParseList.size() != 0) {
             candidates.emplace_back(firstCandidate);
         } else {
-            string newCandidate = dictionary.getCorrectForm(firstCandidate->getName());
+            string newCandidate = dictionary->getCorrectForm(firstCandidate->getName());
             if (!newCandidate.empty()){
                 candidates.emplace_back(new Candidate(newCandidate, Operator::MISSPELLED_REPLACE));
             }
@@ -179,7 +179,7 @@ void SimpleSpellChecker::loadDictionaries() {
 }
 
 bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) const{
-    string forcedReplacement = fsm.getDictionary().getCorrectForm(word->getName());
+    string forcedReplacement = fsm.getDictionary()->getCorrectForm(word->getName());
     if (!forcedReplacement.empty()){
         result->addWord(new Word(forcedReplacement));
         return true;

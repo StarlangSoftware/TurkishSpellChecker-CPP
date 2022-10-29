@@ -9,9 +9,9 @@
 
 TEST_CASE("NGramSpellCheckerTest-testSpellCheck") {
     FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
-    NGram nGram = NGram<string>("ngram.txt");
+    auto* nGram = new NGram<string>("ngram.txt");
     NoSmoothing<string> noSmoothing;
-    noSmoothing.setProbabilities(nGram);
+    noSmoothing.setProbabilities(*nGram);
     Sentence* original[] = {new Sentence("demokratik cumhuriyet en kıymetli varlığımızdır"),
                            new Sentence("bu tablodaki değerler zedelenmeyecektir"),
                            new Sentence("milliyet'in geleneksel yılın sporcusu anketi 43. yaşını doldurdu"),
@@ -46,9 +46,9 @@ TEST_CASE("NGramSpellCheckerTest-testSpellCheck") {
 
 TEST_CASE("NGramSpellCheckerTest-testSpellCheck2") {
     FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
-    NGram nGram = NGram<string>("ngram.txt");
+    auto* nGram = new NGram<string>("ngram.txt");
     NoSmoothing<string> noSmoothing;
-    noSmoothing.setProbabilities(nGram);
+    noSmoothing.setProbabilities(*nGram);
     Sentence* original[] = {new Sentence("yeni sezon başladı"),
                             new Sentence("sırtıkara adındaki canlı , bir balıktır"),
                             new Sentence("siyah ayı , ayıgiller familyasına ait bir ayı türüdür"),
@@ -79,9 +79,9 @@ TEST_CASE("NGramSpellCheckerTest-testSpellCheck2") {
 
 TEST_CASE("NGramSpellCheckerTest-testSpellCheckSurfaceForm") {
     FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
-    NGram nGram = NGram<string>("ngram.txt");
+    auto* nGram = new NGram<string>("ngram.txt");
     NoSmoothing<string> noSmoothing;
-    noSmoothing.setProbabilities(nGram);
+    noSmoothing.setProbabilities(*nGram);
     NGramSpellChecker nGramSpellChecker = NGramSpellChecker(fsm, nGram, false);
     REQUIRE("noter hakkında" == nGramSpellChecker.spellCheck(new Sentence("noter hakkınad"))->to_string());
     REQUIRE("arçelik'in çamaşır" == nGramSpellChecker.spellCheck(new Sentence("arçelik'in çamşaır"))->to_string());
