@@ -6,9 +6,30 @@
 #include "Language/TurkishLanguage.h"
 #include <fstream>
 
-const vector<string> SimpleSpellChecker::shortcuts = {"cc", "cm2", "cm", "gb", "ghz", "gr", "gram", "hz", "inc", "inch", "inç",
-"kg", "kw", "kva", "litre", "lt", "m2", "m3", "mah", "mb", "metre", "mg", "mhz", "ml", "mm", "mp", "ms",
-"mt", "mv", "tb", "tl", "va", "volt", "watt", "ah", "hp"};
+const vector<string> SimpleSpellChecker::shortcuts = {"cc", "cm2", "cm", "gb", "ghz", "gr", "gram", "hz", "inc", "inch",
+                                                      "inç", "kg", "kw", "kva", "litre", "lt", "m2", "m3", "mah", "mb",
+                                                      "metre", "mg", "mhz", "ml", "mm", "mp", "ms", "mt", "mv", "tb",
+                                                      "tl", "va", "volt", "watt", "ah", "hp", "oz", "rpm", "dpi", "ppm",
+                                                      "ohm", "kwh", "kcal", "kbit", "mbit", "gbit", "bit", "byte", "mbps",
+                                                      "gbps", "cm3", "mm2", "mm3", "khz", "ft", "db", "sn"};
+
+const vector<string> SimpleSpellChecker::conditionalShortcuts = {"g", "v", "m", "l", "w", "s"};
+
+const vector<string> SimpleSpellChecker::questionSuffixList = {"mi", "mı", "mu", "mü", "miyim", "misin", "miyiz", "midir",
+                                                               "miydi", "mıyım", "mısın", "mıyız", "mıdır", "mıydı", "muyum",
+                                                               "musun", "muyuz", "mudur", "muydu", "müyüm", "müsün", "müyüz",
+                                                               "müdür", "müydü", "miydim", "miydin", "miydik", "miymiş",
+                                                               "mıydım", "mıydın", "mıydık", "mıymış", "muydum", "muydun",
+                                                               "muyduk", "muymuş", "müydüm", "müydün", "müydük", "müymüş",
+                                                               "misiniz", "mısınız", "musunuz", "müsünüz", "miyimdir",
+                                                               "misindir", "miyizdir", "miydiniz", "miydiler", "miymişim",
+                                                               "miymişiz", "mıyımdır", "mısındır", "mıyızdır", "mıydınız",
+                                                               "mıydılar", "mıymışım", "mıymışız", "muyumdur", "musundur",
+                                                               "muyuzdur", "muydunuz", "muydular", "muymuşum", "muymuşuz",
+                                                               "müyümdür", "müsündür", "müyüzdür", "müydünüz", "müydüler",
+                                                               "müymüşüm", "müymüşüz", "miymişsin", "miymişler", "mıymışsın",
+                                                               "mıymışlar", "muymuşsun", "muymuşlar", "müymüşsün", "müymüşler",
+                                                               "misinizdir", "mısınızdır", "musunuzdur", "müsünüzdür"};
 
 /**
  * The generateCandidateList method takes a String as an input. Firstly, it creates a String consists of lowercase Turkish letters
@@ -68,7 +89,7 @@ vector<Candidate*> SimpleSpellChecker::candidateList(Word *word){
             candidates.emplace_back(firstCandidate);
         } else {
             string newCandidate = dictionary->getCorrectForm(firstCandidate->getName());
-            if (!newCandidate.empty()){
+            if (!newCandidate.empty() && fsm.morphologicalAnalysis(newCandidate).size() > 0){
                 candidates.emplace_back(new Candidate(newCandidate, Operator::MISSPELLED_REPLACE));
             }
         }
@@ -114,18 +135,19 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
         if (i < sentence->wordCount() - 1){
             nextWord = sentence->getWord(i + 1);
         }
-        if (forcedMisspellCheck(word, result) || forcedBackwardMergeCheck(word, result, previousWord)){
+        if (forcedMisspellCheck(word, result) || forcedBackwardMergeCheck(word, result, previousWord) || forcedSuffixMergeCheck(word, result, previousWord)){
             continue;
         }
-        if (forcedForwardMergeCheck(word, result, nextWord)){
+        if (forcedForwardMergeCheck(word, result, nextWord) || forcedHyphenMergeCheck(word, result, previousWord, nextWord)){
             i++;
             continue;
         }
-        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result)){
+        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result) || forcedDeDaSplitCheck(word, result) || forcedQuestionSuffixSplitCheck(word, result)){
             continue;
         }
         FsmParseList fsmParseList = fsm.morphologicalAnalysis(word->getName());
-        if (fsmParseList.size() == 0) {
+        FsmParseList upperCaseFsmParseList = fsm.morphologicalAnalysis(Word::toCapital(word->getName()));
+        if (fsmParseList.size() == 0 && upperCaseFsmParseList.size() == 0) {
             candidates = mergedCandidatesList(previousWord, word, nextWord);
             if (candidates.empty()) {
                 candidates = candidateList(word);
@@ -226,12 +248,17 @@ bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) const{
 }
 
 bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result) const{
-    string shortcutRegex = "[0-9]+(" + shortcuts[0];
+    string shortcutRegex = "^(([1-9][0-9]*)|[0])(([.]|[,])[0-9]*)?(" + shortcuts[0];
     for (int i = 1; i < shortcuts.size(); i++){
         shortcutRegex += "|" + shortcuts[i];
     }
-    shortcutRegex += ")";
-    if (regex_search(word->getName(), regex(shortcutRegex))){
+    shortcutRegex += ")$";
+    string conditionalShortcutRegex = "^(([1-9][0-9]{0,2})|[0])(([.]|[,])[0-9]*)?(" + conditionalShortcuts[0];
+    for (int i = 1; i < conditionalShortcuts.size(); i++){
+        conditionalShortcutRegex += "|" + conditionalShortcuts[i];
+    }
+    conditionalShortcutRegex += ")$";
+    if (regex_search(word->getName(), regex(shortcutRegex)) || regex_search(word->getName(), regex(conditionalShortcutRegex))){
         pair<string, string> pair = getSplitPair(word);
         result->addWord(new Word(pair.first));
         result->addWord(new Word(pair.second));
@@ -298,4 +325,104 @@ void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result
     vector<string> words = Word::split(multiWord);
     result->addWord(new Word(words[0]));
     result->addWord(new Word(words[1]));
+}
+
+bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
+    string wordName = word->getName();
+    string capitalizedWordName = Word::toCapital(wordName);
+    TxtWord* txtWord = nullptr;
+    if (wordName.ends_with("da") || wordName.ends_with("de")) {
+        if (fsm.morphologicalAnalysis(wordName).size() == 0 && fsm.morphologicalAnalysis(capitalizedWordName).size() == 0){
+            string newWordName = Word::substring(wordName, 0, Word::size(wordName) - 2);
+            FsmParseList fsmParseList = fsm.morphologicalAnalysis(newWordName);
+            TxtWord* txtNewWord = (TxtWord*) fsm.getDictionary()->getWord(Word::toLowerCase(newWordName));
+            if (txtNewWord != nullptr && txtNewWord->isProperNoun()) {
+                if (fsm.morphologicalAnalysis(newWordName + "'" + "da").size() > 0) {
+                    result->addWord(new Word(newWordName + "'" + "da"));
+                } else {
+                    result->addWord(new Word(newWordName + " " + "de"));
+                }
+                return true;
+            }
+            if (fsmParseList.size() > 0) {
+                txtWord = (TxtWord*) fsm.getDictionary()->getWord(fsmParseList.getParseWithLongestRootWord().getWord()->getName());
+            }
+            if (txtWord != nullptr && !txtWord->isCode()) {
+                result->addWord(new Word(newWordName));
+                if (TurkishLanguage::isBackVowel(Word::lastVowel(newWordName))) {
+                    if (txtWord->notObeysVowelHarmonyDuringAgglutination()) {
+                        result->addWord(new Word("de"));
+                    } else {
+                        result->addWord(new Word("da"));
+                    }
+                } else {
+                    if (txtWord->notObeysVowelHarmonyDuringAgglutination()) {
+                        result->addWord(new Word("da"));
+                    } else {
+                        result->addWord(new Word("de"));
+                    }
+                }
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool SimpleSpellChecker::forcedSuffixMergeCheck(Word *word, Sentence *result, Word *previousWord) {
+    vector<string> liList = {"li", "lı", "lu", "lü"};
+    vector<string> likList = {"lik", "lık", "luk", "lük"};
+    if (find(liList.begin(), liList.end(), word->getName()) != liList.end() ||
+    find(likList.begin(), likList.end(), word->getName()) != likList.end()){
+        if (previousWord != nullptr && regex_search(previousWord->getName(), regex("\\d+"))) {
+            for (const string& suffix : liList) {
+                if (Word::size(word->getName()) == 2 &&
+                    fsm.morphologicalAnalysis(previousWord->getName() + "'" + suffix).size() > 0) {
+                    result->replaceWord(result->wordCount() - 1, new Word(previousWord->getName() + "'" + suffix));
+                    return true;
+                }
+            }
+            for (const string& suffix : likList) {
+                if (Word::size(word->getName()) == 3 &&
+                    fsm.morphologicalAnalysis(previousWord->getName() + "'" + suffix).size() > 0) {
+                    result->replaceWord(result->wordCount() - 1, new Word(previousWord->getName() + "'" + suffix));
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool SimpleSpellChecker::forcedHyphenMergeCheck(Word *word, Sentence *result, Word *previousWord, Word *nextWord) {
+    if (word->getName() == "-" || word->getName() == "–" || word->getName() == "—") {
+        if (previousWord != nullptr && nextWord != nullptr && regex_search(previousWord->getName(), regex("^[a-zA-ZçöğüşıÇÖĞÜŞİ]+$"))
+            && regex_search(nextWord->getName(), regex("^[a-zA-ZçöğüşıÇÖĞÜŞİ]+$"))) {
+            string newWordName = previousWord->getName() + "-" + nextWord->getName();
+            if (fsm.morphologicalAnalysis(newWordName).size() > 0) {
+                result->replaceWord(result->wordCount() - 1, new Word(newWordName));
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool SimpleSpellChecker::forcedQuestionSuffixSplitCheck(Word *word, Sentence *result) {
+    string wordName = word->getName();
+    if (fsm.morphologicalAnalysis(wordName).size() > 0){
+        return false;
+    }
+    for (const string& questionSuffix : questionSuffixList) {
+        if (wordName.ends_with(questionSuffix)) {
+            string newWordName = Word::substring(wordName, 0, wordName.find_last_of(questionSuffix));
+            auto* txtWord = (TxtWord*) fsm.getDictionary()->getWord(newWordName);
+            if (fsm.morphologicalAnalysis(newWordName).size() > 0 && txtWord != nullptr && !txtWord->isCode()) {
+                result->addWord(new Word(newWordName));
+                result->addWord(new Word(questionSuffix));
+                return true;
+            }
+        }
+    }
+    return false;
 }

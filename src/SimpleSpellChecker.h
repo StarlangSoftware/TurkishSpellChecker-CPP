@@ -20,6 +20,10 @@ protected:
     string getCorrectForm(const string& wordName, const unordered_map<string, string>& dictionary) const;
     bool forcedSplitCheck(Word* word, Sentence* result) const;
     bool forcedShortcutCheck(Word* word, Sentence* result) const;
+    bool forcedDeDaSplitCheck(Word* word, Sentence* result);
+    bool forcedSuffixMergeCheck(Word* word, Sentence* result, Word* previousWord);
+    bool forcedHyphenMergeCheck(Word* word, Sentence* result, Word* previousWord, Word* nextWord);
+    bool forcedQuestionSuffixSplitCheck(Word* word, Sentence* result);
     vector<Candidate*> mergedCandidatesList(Word* previousWord, Word* word, Word* nextWord);
     vector<Candidate*> splitCandidatesList(Word* word);
     void addSplitWords(const string& multiWord, Sentence* result) const;
@@ -28,6 +32,8 @@ private:
     unordered_map<string, string> mergedWords;
     unordered_map<string, string> splitWords;
     static const vector<string> shortcuts;
+    static const vector<string> conditionalShortcuts;
+    static const vector<string> questionSuffixList;
     void loadDictionaries();
     pair<string, string> getSplitPair(Word* word) const;
 public:
