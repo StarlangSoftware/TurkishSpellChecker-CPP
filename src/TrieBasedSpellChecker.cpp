@@ -143,21 +143,17 @@ vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandid
     for (int j = 0; j < Word::size(letters); j++) {
         string replaced = Word::substring(currentName, 0, currentIndex) + Word::charAt(letters, j) +
                           Word::substring(currentName, currentIndex + 1);
-        if (trie->startsWith(Word::substring(replaced, 0, currentIndex + 1))) {
-            candidates.emplace_back(new TrieCandidate(replaced, currentIndex, currentPenalty + 1));
-        }
+        candidates.emplace_back(new TrieCandidate(replaced, currentIndex, currentPenalty + 1));
         string added = Word::substring(currentName, 0, currentIndex) + Word::charAt(letters, j) +
                        Word::substring(currentName, currentIndex);
-        if (trie->startsWith(Word::substring(added, 0, currentIndex + 1))) {
-            candidates.emplace_back(new TrieCandidate(added, currentIndex, currentPenalty + 1));
-        }
+        candidates.emplace_back(new TrieCandidate(added, currentIndex, currentPenalty + 1));
         string addedLast = currentName + Word::charAt(letters, j);
         if (trie->startsWith(addedLast)) {
             candidates.emplace_back(new TrieCandidate(addedLast, currentIndex, currentPenalty + 1));
         }
     }
     string deleted = Word::substring(currentName, 0, currentIndex) + Word::substring(currentName, currentIndex + 1);
-    if (deleted.length() > 1 && trie->startsWith(Word::substring(deleted, 0, currentIndex))) {
+    if (deleted.length() > 1) {
         candidates.emplace_back(new TrieCandidate(deleted, currentIndex - 1, currentPenalty + 1));
     }
     if (currentIndex < Word::size(currentName) - 1 &&
