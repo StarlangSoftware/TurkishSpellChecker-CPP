@@ -101,10 +101,11 @@ vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandid
     int currentIndex = candidate->getCurrentIndex();
     double currentPenalty = candidate->getCurrentPenalty();
     string letters;
-    if (trie->getTrieNode(Word::substring(currentName, 0, currentIndex)) == nullptr) {
+    SpellCheckerTrieNode* currentNode = trie->getTrieNode(Word::substring(currentName, 0, currentIndex));
+    if (currentNode == nullptr) {
         return candidates;
     }
-    letters = trie->getTrieNode(Word::substring(currentName, 0, currentIndex))->childrenToString();
+    letters = currentNode->childrenToString();
     string ch = Word::charAt(currentName, currentIndex);
     string ch2;
     if (ch == "c") {
