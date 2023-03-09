@@ -78,7 +78,7 @@ vector<Candidate*> SimpleSpellChecker::generateCandidateList(const string& word)
  * @param word Word input.
  * @return candidates {@link vector}.
  */
-vector<Candidate*> SimpleSpellChecker::candidateList(Word *word){
+vector<Candidate*> SimpleSpellChecker::candidateList(Word *word, Sentence* sentence){
     vector<Candidate*> firstCandidates;
     vector<Candidate*> candidates;
     TxtDictionary* dictionary = fsm.getDictionary();
@@ -150,7 +150,7 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
         if (fsmParseList.size() == 0 && upperCaseFsmParseList.size() == 0) {
             candidates = mergedCandidatesList(previousWord, word, nextWord);
             if (candidates.empty()) {
-                candidates = candidateList(word);
+                candidates = candidateList(word, sentence);
             }
             if (candidates.empty()) {
                 vector<Candidate*> splitCandidates = splitCandidatesList(word);

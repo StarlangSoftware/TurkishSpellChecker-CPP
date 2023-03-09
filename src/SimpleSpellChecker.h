@@ -27,6 +27,8 @@ protected:
     vector<Candidate*> mergedCandidatesList(Word* previousWord, Word* word, Word* nextWord);
     vector<Candidate*> splitCandidatesList(Word* word);
     void addSplitWords(const string& multiWord, Sentence* result) const;
+    void loadDictionaries();
+    virtual vector<Candidate*> candidateList(Word* word, Sentence* sentence);
 private:
     vector<Candidate*> generateCandidateList(const string& word) const;
     unordered_map<string, string> mergedWords;
@@ -34,11 +36,9 @@ private:
     static const vector<string> shortcuts;
     static const vector<string> conditionalShortcuts;
     static const vector<string> questionSuffixList;
-    void loadDictionaries();
     pair<string, string> getSplitPair(Word* word) const;
 public:
     explicit SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm);
-    vector<Candidate*> candidateList(Word* word);
     Sentence* spellCheck(Sentence* sentence) override;
 };
 

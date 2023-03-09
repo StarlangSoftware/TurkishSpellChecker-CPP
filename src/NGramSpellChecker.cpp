@@ -12,7 +12,8 @@
  * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
  * @param nGram {@link NGram} type input.
  */
-NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<string>* nGram, const SpellCheckerParameter& _parameter) : SimpleSpellChecker(fsm) {
+NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
+                                     const SpellCheckerParameter &_parameter) : SimpleSpellChecker(fsm) {
     this->nGram = nGram;
     this->parameter = _parameter;
 }
@@ -34,52 +35,54 @@ NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<
  * @return Sentence result.
  */
 Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
-    Word* word, *bestRoot, *previousRoot = nullptr, *root, *nextRoot;
-    Candidate* bestCandidate;
+    Word *word, *bestRoot, *previousRoot = nullptr, *root, *nextRoot;
+    Candidate *bestCandidate;
     FsmParseList fsmParses;
     double previousProbability, nextProbability, bestProbability;
-    vector<Candidate*> candidates;
-    auto* result = new Sentence();
+    vector<Candidate *> candidates;
+    auto *result = new Sentence();
     root = checkAnalysisAndSetRootForWordAtIndex(sentence, 0);
     nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, 1);
     for (int i = 0; i < sentence->wordCount(); i++) {
-        Word* nextWord = nullptr;
-        Word* previousWord = nullptr;
-        Word* nextNextWord = nullptr;
-        Word* previousPreviousWord = nullptr;
+        Word *nextWord = nullptr;
+        Word *previousWord = nullptr;
+        Word *nextNextWord = nullptr;
+        Word *previousPreviousWord = nullptr;
         word = sentence->getWord(i);
-        if (i > 0){
+        if (i > 0) {
             previousWord = sentence->getWord(i - 1);
         }
-        if (i > 1){
+        if (i > 1) {
             previousPreviousWord = sentence->getWord(i - 2);
         }
-        if (i < sentence->wordCount() - 1){
+        if (i < sentence->wordCount() - 1) {
             nextWord = sentence->getWord(i + 1);
         }
-        if (i < sentence->wordCount() - 2){
+        if (i < sentence->wordCount() - 2) {
             nextNextWord = sentence->getWord(i + 2);
         }
-        if (forcedMisspellCheck(word, result)){
+        if (forcedMisspellCheck(word, result)) {
             previousRoot = checkAnalysisAndSetRootForWordAtIndex(result, result->wordCount() - 1);
             root = nextRoot;
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
             continue;
         }
-        if (forcedBackwardMergeCheck(word, result, previousWord) || forcedSuffixMergeCheck(word, result, previousWord)){
+        if (forcedBackwardMergeCheck(word, result, previousWord) ||
+            forcedSuffixMergeCheck(word, result, previousWord)) {
             previousRoot = checkAnalysisAndSetRootForWordAtIndex(result, result->wordCount() - 1);
             root = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 1);
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
             continue;
         }
-        if (forcedForwardMergeCheck(word, result, nextWord) || forcedHyphenMergeCheck(word, result, previousWord, nextWord)){
+        if (forcedForwardMergeCheck(word, result, nextWord) ||
+            forcedHyphenMergeCheck(word, result, previousWord, nextWord)) {
             i++;
             previousRoot = checkAnalysisAndSetRootForWordAtIndex(result, result->wordCount() - 1);
             root = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 1);
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
             continue;
         }
-        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result)){
+        if (forcedSplitCheck(word, result) || forcedShortcutCheck(word, result)) {
             previousRoot = checkAnalysisAndSetRootForWordAtIndex(result, result->wordCount() - 1);
             root = nextRoot;
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
@@ -93,36 +96,41 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
                 continue;
             }
         }
-        if (root == nullptr || (Word::size(word->getName()) <= 3 && fsm.morphologicalAnalysis(word->getName()).size() == 0)) {
+        if (root == nullptr ||
+            (Word::size(word->getName()) <= parameter.getMinWordLength() &&
+             fsm.morphologicalAnalysis(word->getName()).size() == 0)) {
             candidates.clear();
-            if (root == nullptr){
-                candidates = candidateList(word);
-                vector<Candidate*> splitCandidates = splitCandidatesList(word);
+            if (root == nullptr) {
+                candidates = candidateList(word, sentence);
+                vector<Candidate *> splitCandidates = splitCandidatesList(word);
                 candidates.insert(candidates.end(), splitCandidates.begin(), splitCandidates.end());
             }
-            vector<Candidate*> mergedCandidates = mergedCandidatesList(previousWord, word, nextWord);
+            vector<Candidate *> mergedCandidates = mergedCandidatesList(previousWord, word, nextWord);
             candidates.insert(candidates.end(), mergedCandidates.begin(), mergedCandidates.end());
             bestCandidate = new Candidate(word->getName(), Operator::NO_CHANGE);
             bestRoot = word;
             bestProbability = parameter.getThreshold();
-            for (Candidate* candidate : candidates) {
-                if (candidate->getOperator() == Operator::SPELL_CHECK || candidate->getOperator() == Operator::MISSPELLED_REPLACE){
+            for (Candidate *candidate: candidates) {
+                if (candidate->getOperator() == Operator::SPELL_CHECK ||
+                    candidate->getOperator() == Operator::MISSPELLED_REPLACE ||
+                    candidate->getOperator() == Operator::CONTEXT_BASED ||
+                    candidate->getOperator() == Operator::TRIE_BASED) {
                     root = checkAnalysisAndSetRoot(candidate->getName());
                 }
-                if (candidate->getOperator() == Operator::BACKWARD_MERGE && previousWord != nullptr){
+                if (candidate->getOperator() == Operator::BACKWARD_MERGE && previousWord != nullptr) {
                     root = checkAnalysisAndSetRoot(previousWord->getName() + word->getName());
-                    if (previousPreviousWord != nullptr){
+                    if (previousPreviousWord != nullptr) {
                         previousRoot = checkAnalysisAndSetRoot(previousPreviousWord->getName());
                     }
                 }
-                if (candidate->getOperator() == Operator::FORWARD_MERGE && nextWord != nullptr){
+                if (candidate->getOperator() == Operator::FORWARD_MERGE && nextWord != nullptr) {
                     root = checkAnalysisAndSetRoot(word->getName() + nextWord->getName());
-                    if (nextNextWord != nullptr){
+                    if (nextNextWord != nullptr) {
                         nextRoot = checkAnalysisAndSetRoot(nextNextWord->getName());
                     }
                 }
                 if (previousRoot != nullptr) {
-                    if (candidate->getOperator() == Operator::SPLIT){
+                    if (candidate->getOperator() == Operator::SPLIT) {
                         root = checkAnalysisAndSetRoot(Word::split(candidate->getName())[0]);
                     }
                     previousProbability = getProbability(previousRoot->getName(), root->getName());
@@ -130,14 +138,14 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
                     previousProbability = 0.0;
                 }
                 if (nextRoot != nullptr) {
-                    if (candidate->getOperator() == Operator::SPLIT){
+                    if (candidate->getOperator() == Operator::SPLIT) {
                         root = checkAnalysisAndSetRoot(Word::split(candidate->getName())[1]);
                     }
                     nextProbability = getProbability(root->getName(), nextRoot->getName());
                 } else {
                     nextProbability = 0.0;
                 }
-                if (std::max(previousProbability, nextProbability) > bestProbability) {
+                if (std::max(previousProbability, nextProbability) > bestProbability || candidates.size() == 1) {
                     bestCandidate = candidate;
                     bestRoot = root;
                     bestProbability = std::max(previousProbability, nextProbability);
@@ -148,8 +156,8 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
             }
             if (bestCandidate->getOperator() == Operator::BACKWARD_MERGE) {
                 result->replaceWord(i - 1, new Word(bestCandidate->getName()));
-            } else{
-                if (bestCandidate->getOperator() == Operator::SPLIT){
+            } else {
+                if (bestCandidate->getOperator() == Operator::SPLIT) {
                     addSplitWords(bestCandidate->getName(), result);
                 } else {
                     result->addWord(new Word(bestCandidate->getName()));
@@ -174,24 +182,23 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
  * @return If the word is misspelled, null; otherwise the longest root word of the possible analyses.
  */
 Word *NGramSpellChecker::checkAnalysisAndSetRootForWordAtIndex(Sentence *sentence, int index) {
-    if (index < sentence->wordCount()){
+    if (index < sentence->wordCount()) {
         string wordName = sentence->getWord(index)->getName();
-        if (regex_match(wordName, regex(".*\\d+.*")) && regex_match(wordName, regex(".*[a-zA-ZçöğüşıÇÖĞÜŞİ]+.*")) && wordName.find('\'') == string::npos || Word::size(wordName) <= 3){
+        if ((regex_match(wordName, regex(".*\\d+.*")) && regex_match(wordName, regex(".*[a-zA-ZçöğüşıÇÖĞÜŞİ]+.*")) &&
+             wordName.find('\'') == string::npos) || Word::size(wordName) < parameter.getMinWordLength()) {
             return sentence->getWord(index);
         }
         FsmParseList fsmParses = fsm.morphologicalAnalysis(sentence->getWord(index)->getName());
-        if (fsmParses.size() != 0){
-            if (this->parameter.isRootNGram()){
+        if (fsmParses.size() != 0) {
+            if (this->parameter.isRootNGram()) {
                 return fsmParses.getParseWithLongestRootWord().getWord();
             }
             return sentence->getWord(index);
         } else {
             string upperCaseWordName = Word::toCapital(wordName);
             FsmParseList upperCaseFsmParses = fsm.morphologicalAnalysis(upperCaseWordName);
-            if (upperCaseFsmParses.size() != 0)
-            {
-                if (parameter.isRootNGram())
-                {
+            if (upperCaseFsmParses.size() != 0) {
+                if (parameter.isRootNGram()) {
                     return upperCaseFsmParses.getParseWithLongestRootWord().getWord();
                 }
                 return sentence->getWord(index);
@@ -201,11 +208,19 @@ Word *NGramSpellChecker::checkAnalysisAndSetRootForWordAtIndex(Sentence *sentenc
     return nullptr;
 }
 
-Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string& word){
-    FsmParseList fsmParses = fsm.morphologicalAnalysis(word);
-    if (fsmParses.size() != 0){
-        if (this->parameter.isRootNGram()){
-            return fsmParses.getParseWithLongestRootWord().getWord();
+Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string &word) {
+    FsmParseList fsmParsesOfWord = fsm.morphologicalAnalysis(word);
+    if (fsmParsesOfWord.size() != 0) {
+        if (this->parameter.isRootNGram()) {
+            return fsmParsesOfWord.getParseWithLongestRootWord().getWord();
+        } else {
+            return new Word(word);
+        }
+    }
+    FsmParseList fsmParsesOfCapitalizedWord = fsm.morphologicalAnalysis(Word::toCapital(word));
+    if (fsmParsesOfCapitalizedWord.size() != 0) {
+        if (this->parameter.isRootNGram()) {
+            return fsmParsesOfCapitalizedWord.getParseWithLongestRootWord().getWord();
         } else {
             return new Word(word);
         }
@@ -213,6 +228,7 @@ Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string& word){
     return nullptr;
 }
 
-double NGramSpellChecker::getProbability(const string& word1, const string& word2) const{
+double NGramSpellChecker::getProbability(const string &word1, const string &word2) const {
     return nGram->getProbability({word1, word2});
 }
+
