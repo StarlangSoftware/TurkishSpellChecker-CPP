@@ -195,7 +195,11 @@ void SimpleSpellChecker::loadDictionaries() {
     while (inputStream.good()){
         getline(inputStream, line);
         vector<string> items = Word::split(line);
-        splitWords.emplace(items[0], items[1] + " " + items[2]);
+        string result = items[1];
+        for (int i = 2; i < items.size(); i++){
+            result += " " + items[i];
+        }
+        splitWords.emplace(items[0], result);
     }
     inputStream.close();
 }
@@ -323,8 +327,9 @@ pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
 
 void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result) const{
     vector<string> words = Word::split(multiWord);
-    result->addWord(new Word(words[0]));
-    result->addWord(new Word(words[1]));
+    for (auto& word : words){
+        result->addWord(new Word(word));
+    }
 }
 
 bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
