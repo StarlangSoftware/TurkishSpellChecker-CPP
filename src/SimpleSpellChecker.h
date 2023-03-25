@@ -9,11 +9,13 @@
 #include <FsmMorphologicalAnalyzer.h>
 #include <unordered_map>
 #include "SpellChecker.h"
+#include "SpellCheckerParameter.h"
 #include "Candidate.h"
 
 class SimpleSpellChecker : public SpellChecker {
 protected:
     FsmMorphologicalAnalyzer fsm;
+    SpellCheckerParameter parameter;
     bool forcedMisspellCheck(Word* word, Sentence* result) const;
     bool forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) const;
     bool forcedForwardMergeCheck(Word* word, Sentence* result, Word* nextWord) const;
@@ -29,6 +31,7 @@ protected:
     void addSplitWords(const string& multiWord, Sentence* result) const;
     void loadDictionaries();
     virtual vector<Candidate*> candidateList(Word* word, Sentence* sentence);
+    ifstream getInputStream(const string& fileName);
 private:
     vector<Candidate*> generateCandidateList(const string& word) const;
     unordered_map<string, string> mergedWords;
@@ -39,6 +42,7 @@ private:
     pair<string, string> getSplitPair(Word* word) const;
 public:
     explicit SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm);
+    SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm, const SpellCheckerParameter& parameter);
     Sentence* spellCheck(Sentence* sentence) override;
 };
 

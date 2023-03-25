@@ -19,6 +19,18 @@ NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<
 }
 
 /**
+ * A constructor of {@link NGramSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and an {@link NGram}
+ * as inputs. Then, calls its super class {@link SimpleSpellChecker} with given {@link FsmMorphologicalAnalyzer} and
+ * assigns given {@link NGram} to the nGram variable.
+ *
+ * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
+ * @param nGram {@link NGram} type input.
+ */
+NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram) : SimpleSpellChecker(fsm){
+    this->nGram = nGram;
+}
+
+/**
  * The spellCheck method takes a {@link Sentence} as an input and loops i times where i ranges from 0 to size of words in given sentence.
  * Then, it calls morphologicalAnalysis method with each word and assigns it to the {@link FsmParseList}, if the size of
  * {@link FsmParseList} is equal to the 0, it adds current word to the candidateList and assigns it to the candidates {@link ArrayList}.

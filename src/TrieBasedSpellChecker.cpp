@@ -21,12 +21,25 @@ TrieBasedSpellChecker::TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm
 }
 
 /**
+ * Another constructor of {@link TrieBasedSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and
+ * an {@link NGram} as inputs. Then, it calls its super class {@link NGramSpellChecker} with given inputs and
+ * initializes the generatedWords and trie variables.
+ *
+ * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
+ * @param nGram {@link NGram} type input.
+ */
+TrieBasedSpellChecker::TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram)
+        : NGramSpellChecker(fsm, nGram) {
+    loadTrieDictionaries();
+    prepareTrie();
+}
+
+/**
  * {@inheritDoc}
  * This method also loads generated words from a file.
  */
 void TrieBasedSpellChecker::loadTrieDictionaries() {
-    ifstream inputStream;
-    inputStream.open("generated_words.txt", ifstream::in);
+    ifstream inputStream = getInputStream("generated_words.txt");
     string line;
     while (inputStream.good()) {
         getline(inputStream, line);

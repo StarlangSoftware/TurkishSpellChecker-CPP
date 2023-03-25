@@ -105,6 +105,7 @@ vector<Candidate*> SimpleSpellChecker::candidateList(Word *word, Sentence* sente
  */
 SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm) {
     this->fsm = fsm;
+    this->parameter = SpellCheckerParameter();
     loadDictionaries();
 }
 
@@ -183,7 +184,7 @@ Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
 
 void SimpleSpellChecker::loadDictionaries() {
     ifstream inputStream;
-    inputStream.open("merged.txt", ifstream::in);
+    inputStream = getInputStream("merged.txt");
     string line;
     while (inputStream.good()){
         getline(inputStream, line);
@@ -191,7 +192,7 @@ void SimpleSpellChecker::loadDictionaries() {
         mergedWords.emplace(items[0] + " " + items[1], items[2]);
     }
     inputStream.close();
-    inputStream.open("split.txt", ifstream::in);
+    inputStream = getInputStream("split.txt");
     while (inputStream.good()){
         getline(inputStream, line);
         vector<string> items = Word::split(line);
@@ -430,4 +431,28 @@ bool SimpleSpellChecker::forcedQuestionSuffixSplitCheck(Word *word, Sentence *re
         }
     }
     return false;
+}
+
+/**
+ * Another constructor of {@link SimpleSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and a
+ * {@link SpellCheckerParameter} as inputs, assigns {@link FsmMorphologicalAnalyzer} to the fsm variable and
+ * {@link SpellCheckerParameter} to the parameter variable. Then, it calls the loadDictionaries method.
+ *
+ * @param fsm       {@link FsmMorphologicalAnalyzer} type input.
+ * @param parameter {@link SpellCheckerParameter} type input.
+ */
+SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer &fsm, const SpellCheckerParameter& parameter) {
+    this->fsm = fsm;
+    this->parameter = parameter;
+    loadDictionaries();
+}
+
+ifstream SimpleSpellChecker::getInputStream(const string& fileName) {
+    ifstream inputStream;
+    if (parameter.getDomain().empty()){
+        inputStream.open(fileName, ifstream::in);
+    } else {
+        inputStream.open(parameter.getDomain() + "_" + fileName, ifstream::in);
+    }
+    return inputStream;
 }

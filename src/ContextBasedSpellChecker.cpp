@@ -20,12 +20,23 @@ ContextBasedSpellChecker::ContextBasedSpellChecker(const FsmMorphologicalAnalyze
 }
 
 /**
+ * Another constructor of {@link ContextBasedSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and
+ * an {@link NGram} as inputs. Then, calls its super class {@link NGramSpellChecker} with given inputs.
+ *
+ * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
+ * @param nGram {@link NGram} type input.
+ */
+ContextBasedSpellChecker::ContextBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram)
+        : NGramSpellChecker(fsm, nGram) {
+    loadContextDictionaries();
+}
+
+/**
  * {@inheritDoc}
  * This method also loads context information from a file.
  */
 void ContextBasedSpellChecker::loadContextDictionaries() {
-    ifstream inputStream;
-    inputStream.open("context_list.txt", ifstream::in);
+    ifstream inputStream = getInputStream("context_list.txt");
     string line;
     while (inputStream.good()){
         getline(inputStream, line);

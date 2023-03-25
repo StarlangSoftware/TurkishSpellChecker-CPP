@@ -8,17 +8,16 @@
 #include <FsmMorphologicalAnalyzer.h>
 #include "NGram.h"
 #include "SimpleSpellChecker.h"
-#include "SpellCheckerParameter.h"
 
 class NGramSpellChecker : public SimpleSpellChecker {
 private:
     NGram<string>* nGram = new NGram<string>(1);
-    SpellCheckerParameter parameter;
     Word* checkAnalysisAndSetRootForWordAtIndex(Sentence* sentence, int index);
     Word* checkAnalysisAndSetRoot(const string& word);
     double getProbability(const string& word1, const string& word2) const;
 public:
     NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<string>* nGram, const SpellCheckerParameter& _parameter);
+    NGramSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<string>* nGram);
     Sentence* spellCheck(Sentence* sentence) override;
 };
 

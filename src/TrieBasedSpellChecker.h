@@ -18,6 +18,7 @@ private:
     int searchCandidates(const vector<Candidate *>& results, TrieCandidate* candidate);
 public:
     TrieBasedSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<string>* nGram, const SpellCheckerParameter& _parameter);
+    TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram);
 protected:
     void loadTrieDictionaries();
     vector<Candidate*> candidateList(Word* word, Sentence* sentence) override;

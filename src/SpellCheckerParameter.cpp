@@ -87,3 +87,21 @@ void SpellCheckerParameter::setMinWordLength(int _minWordLength) {
 int SpellCheckerParameter::getMinWordLength() const {
     return minWordLength;
 }
+
+/**
+ * Sets the _domain name to the specified value.
+ *
+ * @param _domain the new _domain name to set for this object
+ */
+void SpellCheckerParameter::setDomain(const string& _domain) {
+    this->domain = _domain;
+}
+
+/**
+ * Returns the domain name
+ *
+ * @return the domain name
+ */
+string SpellCheckerParameter::getDomain() const{
+    return domain;
+}

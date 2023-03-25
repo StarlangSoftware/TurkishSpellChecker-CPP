@@ -22,10 +22,21 @@ SpellCheckerTrieNode *SpellCheckerTrieNode::getChild(const string& ch) const{
     }
 }
 
+/**
+ * Adds a child TrieNode to the current TrieNode instance.
+ *
+ * @param ch the character key of the child node to be added.
+ * @param child the TrieNode object to be added as a child.
+ */
 void SpellCheckerTrieNode::addChild(const string& ch, SpellCheckerTrieNode* child) {
     children.emplace(ch, child);
 }
 
+/**
+ * Returns a string representation of the keys of all child TrieNodes of the current TrieNode instance.
+ *
+ * @return a string of characters representing the keys of all child TrieNodes.
+ */
 string SpellCheckerTrieNode::childrenToString() const{
     string result;
     for (auto & it : children){
