@@ -79,9 +79,45 @@ TEST_CASE("NGramSpellCheckerTest-testSpellCheck2") {
                             new Sentence("4 lı tahıl zirvesi İstanbul'da gerçekleşti"),
                             new Sentence("10 lük sistemden 100 lık sisteme geçiş yapılacak"),
                             new Sentence("play - off maçlarına çıkacak takımlar belli oldu"),
-                            new Sentence("bu sno model ciha 24inç ekran büyüklüğünde ve 9kg ağırlıktadır")};
+                            new Sentence("bu son model ciha 24inç ekran büyüklüğünde ve 9kg ağırlıktadır")};
     NGramSpellChecker nGramSpellChecker = NGramSpellChecker(fsm, nGram, SpellCheckerParameter());
-    for (int i = 0; i < 11; i++){
+    for (int i = 0; i < 15; i++){
+        REQUIRE(original[i]->to_string() == nGramSpellChecker.spellCheck(modified[i])->to_string());
+    }
+}
+
+TEST_CASE("NGramSpellCheckerTest-testForcedChecks") {
+    FsmMorphologicalAnalyzer fsm = FsmMorphologicalAnalyzer();
+    auto* nGram = new NGram<string>("ngram.txt");
+    NoSmoothing<string> noSmoothing;
+    noSmoothing.setProbabilities(*nGram);
+    Sentence* original[] = {new Sentence("yardımcı olur musunuz ?"),
+                            new Sentence("buraya daha önce gelmemiş miydik ?"),
+                            new Sentence("kutunun boyutları 0.2 m x 0.3 m x 0.5 m olacak"),
+                            new Sentence("2 tb depolama alanına sahip 7200 rpm bir disk"),
+                            new Sentence("anahtarlarımı Kadıköy'de bir lokantada unutmuşum"),
+                            new Sentence("bütün suç Selma'da değil"),
+                            new Sentence("Fransa'nın başkenti Paris'tir"),
+                            new Sentence("Nişantaşı'ndan Kadıköy'e gitmek için metroya binip Üsküdar'da inmek gerekiyor"),
+                            new Sentence("90'lı yıllarda ülkede çok büyük değişimler oldu"),
+                            new Sentence("100'lük parçaları bir araya getirerek 100'lük bir resim oluşturduk"),
+                            new Sentence("size konuyla ilgili bir e-posta gönderdim"),
+                            new Sentence("meyve-sebze reyonundan bir kilo elma aldım")};
+
+    Sentence* modified[] = {new Sentence("yardımcı olurmusunuz ?"),
+                            new Sentence("buraya daha önce gelmemişmiydik ?"),
+                            new Sentence("kutunun boyutları 0.2m x 0.3m x 0.5m olacak"),
+                            new Sentence("2tb depolama alanına sahip 7200rpm bir disk"),
+                            new Sentence("anahtarlarımı Kadıköyda bir lokantada unutmuşum"),
+                            new Sentence("bütün suç Selmada değil"),
+                            new Sentence("Fransanın başkenti Paristir"),
+                            new Sentence("Nişantaşından Kadıköye gitmek için metroya binip Üsküdarda inmek gerekiyor"),
+                            new Sentence("90 lü yıllarda ülkede çok büyük değişimler oldu"),
+                            new Sentence("100 lık parçaları bir araya getirerek 100 lük bir resim oluşturduk"),
+                            new Sentence("size konuyla ilgili bir e - posta gönderdim"),
+                            new Sentence("meyve — sebze reyonundan bir kilo elma aldım")};
+    NGramSpellChecker nGramSpellChecker = NGramSpellChecker(fsm, nGram, SpellCheckerParameter());
+    for (int i = 0; i < 12; i++){
         REQUIRE(original[i]->to_string() == nGramSpellChecker.spellCheck(modified[i])->to_string());
     }
 }

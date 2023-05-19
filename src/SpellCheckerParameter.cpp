@@ -28,8 +28,8 @@ void SpellCheckerParameter::setThreshold(double _threshold) {
  *
  * @param deMiCheck a boolean indicating whether the De-Mi check should be enabled (true) or disabled (false)
  */
-void SpellCheckerParameter::setDeMiCheck(bool _deMiCheck) {
-    this->deMiCheck = _deMiCheck;
+void SpellCheckerParameter::setSuffixCheck(bool _suffixCheck) {
+    this->suffixCheck = _suffixCheck;
 }
 
 /**
@@ -57,8 +57,8 @@ double SpellCheckerParameter::getThreshold() const{
  *
  * @return a boolean indicating whether De-Mi check is enabled for the spell checker
  */
-bool SpellCheckerParameter::isDeMiCheck() const {
-    return deMiCheck;
+bool SpellCheckerParameter::isSuffixCheck() const {
+    return suffixCheck;
 }
 
 /**

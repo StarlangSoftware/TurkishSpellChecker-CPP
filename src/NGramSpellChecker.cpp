@@ -100,8 +100,8 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
             nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);
             continue;
         }
-        if (parameter.isDeMiCheck()) {
-            if (forcedDeDaSplitCheck(word, result) || forcedQuestionSuffixSplitCheck(word, result)) {
+        if (parameter.isSuffixCheck()) {
+            if (forcedDeDaSplitCheck(word, result) || forcedQuestionSuffixSplitCheck(word, result) || forcedSuffixSplitCheck(word, result)) {
                 previousRoot = checkAnalysisAndSetRootForWordAtIndex(result, result->wordCount() - 1);
                 root = nextRoot;
                 nextRoot = checkAnalysisAndSetRootForWordAtIndex(sentence, i + 2);

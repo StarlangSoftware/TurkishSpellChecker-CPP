@@ -26,6 +26,7 @@ protected:
     bool forcedSuffixMergeCheck(Word* word, Sentence* result, Word* previousWord);
     bool forcedHyphenMergeCheck(Word* word, Sentence* result, Word* previousWord, Word* nextWord);
     bool forcedQuestionSuffixSplitCheck(Word* word, Sentence* result);
+    bool forcedSuffixSplitCheck(Word* word, Sentence* result);
     vector<Candidate*> mergedCandidatesList(Word* previousWord, Word* word, Word* nextWord);
     vector<Candidate*> splitCandidatesList(Word* word);
     void addSplitWords(const string& multiWord, Sentence* result) const;
