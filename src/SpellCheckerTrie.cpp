@@ -5,7 +5,7 @@
 #include "SpellCheckerTrie.h"
 
 /**
- * A constructor of {@link SpellCheckerTrie} class which constructs a new SpellCheckerTrie with an empty root node
+ * A constructor of SpellCheckerTrie class which constructs a new SpellCheckerTrie with an empty root node
  */
 SpellCheckerTrie::SpellCheckerTrie() {
     rootNode = new SpellCheckerTrieNode();

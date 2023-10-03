@@ -5,7 +5,7 @@
 #include "SpellCheckerTrieNode.h"
 
 /**
- * A constructor of {@link SpellCheckerTrieNode} class which constructs a new SpellCheckerTrieNode with an empty children HashMap
+ * A constructor of SpellCheckerTrieNode class which constructs a new SpellCheckerTrieNode with an empty children HashMap
  */
 SpellCheckerTrieNode::SpellCheckerTrieNode() = default;
 

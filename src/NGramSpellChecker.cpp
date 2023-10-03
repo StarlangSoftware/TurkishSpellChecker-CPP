@@ -5,12 +5,12 @@
 #include "NGramSpellChecker.h"
 
 /**
- * A constructor of {@link NGramSpellChecker} class which takes a {@link FsmMorphologicalAnalyzer} and an {@link NGram}
- * as inputs. Then, calls its super class {@link SimpleSpellChecker} with given {@link FsmMorphologicalAnalyzer} and
- * assigns given {@link NGram} to the nGram variable.
+ * A constructor of NGramSpellChecker class which takes a FsmMorphologicalAnalyzer and an NGram
+ * as inputs. Then, calls its super class SimpleSpellChecker with given FsmMorphologicalAnalyzer and
+ * assigns given NGram to the nGram variable.
  *
- * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
- * @param nGram {@link NGram} type input.
+ * @param fsm   FsmMorphologicalAnalyzer type input.
+ * @param nGram NGram type input.
  */
 NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
                                      const SpellCheckerParameter &_parameter) : SimpleSpellChecker(fsm) {
@@ -19,31 +19,31 @@ NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<
 }
 
 /**
- * A constructor of {@link NGramSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and an {@link NGram}
- * as inputs. Then, calls its super class {@link SimpleSpellChecker} with given {@link FsmMorphologicalAnalyzer} and
- * assigns given {@link NGram} to the nGram variable.
+ * A constructor of NGramSpellChecker class which takes an FsmMorphologicalAnalyzer and an NGram
+ * as inputs. Then, calls its super class SimpleSpellChecker with given FsmMorphologicalAnalyzer and
+ * assigns given NGram to the nGram variable.
  *
- * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
- * @param nGram {@link NGram} type input.
+ * @param fsm   FsmMorphologicalAnalyzer type input.
+ * @param nGram NGram type input.
  */
 NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram) : SimpleSpellChecker(fsm){
     this->nGram = nGram;
 }
 
 /**
- * The spellCheck method takes a {@link Sentence} as an input and loops i times where i ranges from 0 to size of words in given sentence.
- * Then, it calls morphologicalAnalysis method with each word and assigns it to the {@link FsmParseList}, if the size of
- * {@link FsmParseList} is equal to the 0, it adds current word to the candidateList and assigns it to the candidates {@link ArrayList}.
+ * The spellCheck method takes a Sentence as an input and loops i times where i ranges from 0 to size of words in given sentence.
+ * Then, it calls morphologicalAnalysis method with each word and assigns it to the FsmParseList, if the size of
+ * FsmParseList is equal to the 0, it adds current word to the candidateList and assigns it to the candidates ArrayList.
  * <p>
- * Later on, it loops through candidates {@link ArrayList} and calls morphologicalAnalysis method with each word and
- * assigns it to the {@link FsmParseList}. Then, it gets the root from {@link FsmParseList}. For the first time, it defines a previousRoot
+ * Later on, it loops through candidates ArrayList and calls morphologicalAnalysis method with each word and
+ * assigns it to the FsmParseList. Then, it gets the root from FsmParseList. For the first time, it defines a previousRoot
  * by calling getProbability method with root, and for the following times it calls getProbability method with previousRoot and root.
- * Then, it finds out the best probability and the corresponding candidate as best candidate and adds it to the result {@link Sentence}.
+ * Then, it finds out the best probability and the corresponding candidate as best candidate and adds it to the result Sentence.
  * <p>
- * If the size of {@link FsmParseList} is not equal to 0, it directly adds the current word to the result {@link Sentence} and finds
- * the previousRoot directly from the {@link FsmParseList}.
+ * If the size of FsmParseList is not equal to 0, it directly adds the current word to the result Sentence and finds
+ * the previousRoot directly from the FsmParseList.
  *
- * @param sentence {@link Sentence} type input.
+ * @param sentence Sentence type input.
  * @return Sentence result.
  */
 Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {

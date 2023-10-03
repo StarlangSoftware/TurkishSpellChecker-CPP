@@ -6,12 +6,12 @@
 #include "TrieCandidate.h"
 
 /**
- * A constructor of {@link TrieBasedSpellChecker} class which takes a {@link FsmMorphologicalAnalyzer}, an {@link NGram}
- * and a {@link SpellCheckerParameter} as inputs. Then, calls its super class {@link NGramSpellChecker} with given inputs.
+ * A constructor of TrieBasedSpellChecker class which takes a FsmMorphologicalAnalyzer, an NGram
+ * and a SpellCheckerParameter as inputs. Then, calls its super class NGramSpellChecker with given inputs.
  *
- * @param fsm       {@link FsmMorphologicalAnalyzer} type input.
- * @param nGram     {@link NGram} type input.
- * @param parameter {@link SpellCheckerParameter} type input.
+ * @param fsm       FsmMorphologicalAnalyzer type input.
+ * @param nGram     NGram type input.
+ * @param parameter SpellCheckerParameter type input.
  */
 TrieBasedSpellChecker::TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
                                              const SpellCheckerParameter &_parameter) : NGramSpellChecker(fsm, nGram,
@@ -21,12 +21,12 @@ TrieBasedSpellChecker::TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm
 }
 
 /**
- * Another constructor of {@link TrieBasedSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and
- * an {@link NGram} as inputs. Then, it calls its super class {@link NGramSpellChecker} with given inputs and
+ * Another constructor of TrieBasedSpellChecker class which takes an FsmMorphologicalAnalyzer and
+ * an NGram as inputs. Then, it calls its super class NGramSpellChecker with given inputs and
  * initializes the generatedWords and trie variables.
  *
- * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
- * @param nGram {@link NGram} type input.
+ * @param fsm   FsmMorphologicalAnalyzer type input.
+ * @param nGram NGram type input.
  */
 TrieBasedSpellChecker::TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram)
         : NGramSpellChecker(fsm, nGram) {
@@ -62,13 +62,13 @@ void TrieBasedSpellChecker::prepareTrie() {
 }
 
 /**
- * The candidateList method takes a {@link Word} as an input and creates a candidates {@link ArrayList} by calling generateCandidateList
- * method with given word. Then, it loops i times where i ranges from 0 to size of candidates {@link ArrayList} and creates a
- * {@link FsmParseList} by calling morphologicalAnalysis with each item of candidates {@link ArrayList}. If the size of
- * {@link FsmParseList} is 0, it then removes the ith item.
+ * The candidateList method takes a Word as an input and creates a candidates ArrayList by calling generateCandidateList
+ * method with given word. Then, it loops i times where i ranges from 0 to size of candidates ArrayList and creates a
+ * FsmParseList by calling morphologicalAnalysis with each item of candidates ArrayList. If the size of
+ * FsmParseList is 0, it then removes the ith item.
  *
  * @param word Word input.
- * @return candidates {@link ArrayList}.
+ * @return candidates ArrayList.
  */
 vector<Candidate *> TrieBasedSpellChecker::candidateList(Word *word, Sentence *sentence) {
     TrieCandidate *candidate;

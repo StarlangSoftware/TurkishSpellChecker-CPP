@@ -33,13 +33,13 @@ const vector<string> SimpleSpellChecker::questionSuffixList = {"mi", "mı", "mu"
 
 /**
  * The generateCandidateList method takes a String as an input. Firstly, it creates a String consists of lowercase Turkish letters
- * and an {@link vector} candidates. Then, it loops i times where i ranges from 0 to the length of given word. It gets substring
+ * and an vector candidates. Then, it loops i times where i ranges from 0 to the length of given word. It gets substring
  * from 0 to ith index and concatenates it with substring from i+1 to the last index as a new String called deleted. Then, adds
- * this String to the candidates {@link vector}. Secondly, it loops j times where j ranges from 0 to length of
+ * this String to the candidates vector. Secondly, it loops j times where j ranges from 0 to length of
  * lowercase letters String and adds the jth character of this String between substring of given word from 0 to ith index
- * and the substring from i+1 to the last index, then adds it to the candidates {@link vector}. Thirdly, it loops j
+ * and the substring from i+1 to the last index, then adds it to the candidates vector. Thirdly, it loops j
  * times where j ranges from 0 to length of lowercase letters String and adds the jth character of this String between
- * substring of given word from 0 to ith index and the substring from i to the last index, then adds it to the candidates {@link vector}.
+ * substring of given word from 0 to ith index and the substring from i to the last index, then adds it to the candidates vector.
  *
  * @param word String input.
  * @return vector candidates.
@@ -70,13 +70,13 @@ vector<Candidate*> SimpleSpellChecker::generateCandidateList(const string& word)
 }
 
 /**
- * The candidateList method takes a {@link Word} as an input and creates a candidates {@link vector} by calling generateCandidateList
- * method with given word. Then, it loop i times where i ranges from 0 to size of candidates {@link vector} and creates a
- * {@link FsmParseList} by calling morphologicalAnalysis with each item of candidates {@link vector}. If the size of
- * {@link FsmParseList} is 0, it then removes the ith item.
+ * The candidateList method takes a Word as an input and creates a candidates vector by calling generateCandidateList
+ * method with given word. Then, it loop i times where i ranges from 0 to size of candidates vector and creates a
+ * FsmParseList by calling morphologicalAnalysis with each item of candidates vector. If the size of
+ * FsmParseList is 0, it then removes the ith item.
  *
  * @param word Word input.
- * @return candidates {@link vector}.
+ * @return candidates vector.
  */
 vector<Candidate*> SimpleSpellChecker::candidateList(Word *word, Sentence* sentence){
     vector<Candidate*> firstCandidates;
@@ -98,10 +98,10 @@ vector<Candidate*> SimpleSpellChecker::candidateList(Word *word, Sentence* sente
 }
 
 /**
- * A constructor of {@link SimpleSpellChecker} class which takes a {@link FsmMorphologicalAnalyzer} as an input and
+ * A constructor of SimpleSpellChecker class which takes a FsmMorphologicalAnalyzer as an input and
  * assigns it to the fsm variable.
  *
- * @param fsm {@link FsmMorphologicalAnalyzer} type input.
+ * @param fsm FsmMorphologicalAnalyzer type input.
  */
 SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm) {
     this->fsm = fsm;
@@ -110,14 +110,14 @@ SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm) {
 }
 
 /**
- * The spellCheck method takes a {@link Sentence} as an input and loops i times where i ranges from 0 to size of words in given sentence.
- * Then, it calls morphologicalAnalysis method with each word and assigns it to the {@link FsmParseList}, if the size of
- * {@link FsmParseList} is equal to the 0, it adds current word to the candidateList and assigns it to the candidates {@link ArrayList}.
- * if the size of candidates greater than 0, it generates a random number and selects an item from candidates {@link ArrayList} with
+ * The spellCheck method takes a Sentence as an input and loops i times where i ranges from 0 to size of words in given sentence.
+ * Then, it calls morphologicalAnalysis method with each word and assigns it to the FsmParseList, if the size of
+ * FsmParseList is equal to the 0, it adds current word to the candidateList and assigns it to the candidates ArrayList.
+ * if the size of candidates greater than 0, it generates a random number and selects an item from candidates ArrayList with
  * this random number and assign it as newWord. If the size of candidates is not greater than 0, it directly assigns the
- * current word as newWord. At the end, it adds the newWord to the result {@link Sentence}.
+ * current word as newWord. At the end, it adds the newWord to the result Sentence.
  *
- * @param sentence {@link Sentence} type input.
+ * @param sentence Sentence type input.
  * @return Sentence result.
  */
 Sentence *SimpleSpellChecker::spellCheck(Sentence *sentence) {
@@ -212,8 +212,8 @@ void SimpleSpellChecker::loadDictionaries() {
  * Checks if the given word is a misspelled word according to the misspellings list,
  * and if it is, then replaces it with its correct form in the given sentence.
  *
- * @param word   the {@link Word} to check for misspelling
- * @param result the {@link Sentence} that the word belongs to
+ * @param word   the Word to check for misspelling
+ * @param result the Sentence that the word belongs to
  * @return true if the word was corrected, false otherwise
  */
 bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) const{
@@ -229,9 +229,9 @@ bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) const
  * Checks if the given word and its preceding word need to be merged according to the merged list.
  * If the merge is needed, the word and its preceding word are replaced with their merged form in the given sentence.
  *
- * @param word         the {@link Word} to check for merge
- * @param result       the {@link Sentence} that the word belongs to
- * @param previousWord the preceding {@link Word} of the given {@link Word}
+ * @param word         the Word to check for merge
+ * @param result       the Sentence that the word belongs to
+ * @param previousWord the preceding Word of the given Word
  * @return true if the word was merged, false otherwise
  */
 bool SimpleSpellChecker::forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) const{
@@ -256,9 +256,9 @@ string SimpleSpellChecker::getCorrectForm(const string& wordName, const unordere
  * Checks if the given word and its next word need to be merged according to the merged list.
  * If the merge is needed, the word and its next word are replaced with their merged form in the given sentence.
  *
- * @param word     the {@link Word} to check for merge
- * @param result   the {@link Sentence} that the word belongs to
- * @param nextWord the next {@link Word} of the given {@link Word}
+ * @param word     the Word to check for merge
+ * @param result   the Sentence that the word belongs to
+ * @param nextWord the next Word of the given Word
  * @return true if the word was merged, false otherwise
  */
 bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, Word *nextWord) const{
@@ -276,8 +276,8 @@ bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, W
  * Checks if the given word needs to be split according to the split list.
  * If the split is needed, the word is replaced with its split form in the given sentence.
  *
- * @param word   the {@link Word} to check for split
- * @param result the {@link Sentence} that the word belongs to
+ * @param word   the Word to check for split
+ * @param result the Sentence that the word belongs to
  * @return true if the word was split, false otherwise
  */
 bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) const{
@@ -293,8 +293,8 @@ bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) const{
  * Checks if the given word is a shortcut form, such as "5kg" or "2.5km".
  * If it is, it splits the word into its number and unit form and adds them to the given sentence.
  *
- * @param word   the {@link Word} to check for shortcut split
- * @param result the {@link Sentence} that the word belongs to
+ * @param word   the Word to check for shortcut split
+ * @param result the Sentence that the word belongs to
  * @return true if the word was split, false otherwise
  */
 bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result) const{
@@ -320,9 +320,9 @@ bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result) const
 /**
  * Generates a list of merged candidates for the word and previous and next words.
  *
- * @param previousWord The previous {@link Word} in the sentence.
- * @param word         The {@link Word} currently being checked.
- * @param nextWord     The next {@link Word} in the sentence.
+ * @param previousWord The previous Word in the sentence.
+ * @param word         The Word currently being checked.
+ * @param nextWord     The next Word in the sentence.
  * @return A list of merged candidates.
  */
 vector<Candidate *> SimpleSpellChecker::mergedCandidatesList(Word *previousWord, Word *word, Word *nextWord) {
@@ -351,7 +351,7 @@ vector<Candidate *> SimpleSpellChecker::mergedCandidatesList(Word *previousWord,
 /**
  * Generates a list of split candidates for the given word.
  *
- * @param word The {@link Word} currently being checked.
+ * @param word The Word currently being checked.
  * @return A list of split candidates.
  */
 vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
@@ -371,7 +371,7 @@ vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
 /**
  * Splits a word into two parts, a key and a value, based on the first non-numeric/non-punctuation character.
  *
- * @param word the {@link Word} object to split
+ * @param word the Word object to split
  * @return an {@link AbstractMap.SimpleEntry} object containing the key (numeric/punctuation characters) and the value (remaining characters)
  */
 pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
@@ -395,7 +395,7 @@ pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
  * Given a multiword form, splits it and adds it to the given sentence.
  *
  * @param multiWord multiword form to split
- * @param result    the {@link Sentence} to add the split words to
+ * @param result    the Sentence to add the split words to
  */
 void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result) const{
     vector<string> words = Word::split(multiWord);
@@ -408,8 +408,8 @@ void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result
  * Checks if the given word has a "da" or "de" suffix that needs to be split according to a predefined set of rules.
  * If the split is needed, the word is replaced with its bare form and "da" or "de" in the given sentence.
  *
- * @param word   the {@link Word} to check for "da" or "de" split
- * @param result the {@link Sentence} that the word belongs to
+ * @param word   the Word to check for "da" or "de" split
+ * @param result the Sentence that the word belongs to
  * @return true if the word was split, false otherwise
  */
 bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
@@ -459,9 +459,9 @@ bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
  * Checks if the given word is a suffix like 'li' or 'lik' that needs to be merged with its preceding word which is a number.
  * If the merge is needed, the word and its preceding word are replaced with their merged form in the given sentence.
  *
- * @param word         the {@link Word} to check for merge
- * @param sentence     the {@link Sentence} that the word belongs to
- * @param previousWord the preceding {@link Word} of the given {@link Word}
+ * @param word         the Word to check for merge
+ * @param sentence     the Sentence that the word belongs to
+ * @param previousWord the preceding Word of the given Word
  * @return true if the word was merged, false otherwise
  */
 bool SimpleSpellChecker::forcedSuffixMergeCheck(Word *word, Sentence *result, Word *previousWord) {
@@ -496,10 +496,10 @@ bool SimpleSpellChecker::forcedSuffixMergeCheck(Word *word, Sentence *result, Wo
  * it merges the previous word and the next word into a single word and add the new word to the sentence
  * If the merge is valid, it returns true.
  *
- * @param word         current {@link Word}
- * @param result       the {@link Sentence} that the word belongs to
- * @param previousWord the {@link Word} before current word
- * @param nextWord     the {@link Word} after current word
+ * @param word         current Word
+ * @param result       the Sentence that the word belongs to
+ * @param previousWord the Word before current word
+ * @param nextWord     the Word after current word
  * @return true if merge is valid, false otherwise
  */
 bool SimpleSpellChecker::forcedHyphenMergeCheck(Word *word, Sentence *result, Word *previousWord, Word *nextWord) {
@@ -521,8 +521,8 @@ bool SimpleSpellChecker::forcedHyphenMergeCheck(Word *word, Sentence *result, Wo
  * It splits the word with the question suffix and adds the two new words to the sentence.
  * If the split is valid, it returns true.
  *
- * @param word   current {@link Word}
- * @param result the {@link Sentence} that the word belongs to
+ * @param word   current Word
+ * @param result the Sentence that the word belongs to
  * @return true if split is valid, false otherwise
  */
 bool SimpleSpellChecker::forcedQuestionSuffixSplitCheck(Word *word, Sentence *result) {
@@ -548,12 +548,12 @@ bool SimpleSpellChecker::forcedQuestionSuffixSplitCheck(Word *word, Sentence *re
 }
 
 /**
- * Another constructor of {@link SimpleSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and a
- * {@link SpellCheckerParameter} as inputs, assigns {@link FsmMorphologicalAnalyzer} to the fsm variable and
- * {@link SpellCheckerParameter} to the parameter variable. Then, it calls the loadDictionaries method.
+ * Another constructor of SimpleSpellChecker class which takes an FsmMorphologicalAnalyzer and a
+ * SpellCheckerParameter as inputs, assigns FsmMorphologicalAnalyzer to the fsm variable and
+ * SpellCheckerParameter to the parameter variable. Then, it calls the loadDictionaries method.
  *
- * @param fsm       {@link FsmMorphologicalAnalyzer} type input.
- * @param parameter {@link SpellCheckerParameter} type input.
+ * @param fsm       FsmMorphologicalAnalyzer type input.
+ * @param parameter SpellCheckerParameter type input.
  */
 SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer &fsm, const SpellCheckerParameter& parameter) {
     this->fsm = fsm;
@@ -572,11 +572,11 @@ ifstream SimpleSpellChecker::getInputStream(const string& fileName) {
 }
 
 /**
- * Checks whether the given {@link Word} can be split into a proper noun and a suffix, with an apostrophe in between
- * and adds the split result to the {@link Sentence} if it's valid.
+ * Checks whether the given Word can be split into a proper noun and a suffix, with an apostrophe in between
+ * and adds the split result to the Sentence if it's valid.
  *
- * @param word the {@link Word} to check for forced suffix split.
- * @param result the {@link Sentence} that the word belongs to
+ * @param word the Word to check for forced suffix split.
+ * @param result the Sentence that the word belongs to
  * @return true if the split is successful, false otherwise.
  */
 bool SimpleSpellChecker::forcedSuffixSplitCheck(Word *word, Sentence *result) {

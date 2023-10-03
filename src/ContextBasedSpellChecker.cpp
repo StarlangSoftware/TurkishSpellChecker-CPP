@@ -5,12 +5,12 @@
 #include "ContextBasedSpellChecker.h"
 
 /**
- * A constructor of {@link ContextBasedSpellChecker} class which takes a {@link FsmMorphologicalAnalyzer}, an {@link NGram}
- * and a {@link SpellCheckerParameter} as inputs. Then, calls its super class {@link NGramSpellChecker} with given inputs.
+ * A constructor of ContextBasedSpellChecker class which takes a FsmMorphologicalAnalyzer, an NGram
+ * and a SpellCheckerParameter as inputs. Then, calls its super class NGramSpellChecker with given inputs.
  *
- * @param fsm       {@link FsmMorphologicalAnalyzer} type input.
- * @param nGram     {@link NGram} type input.
- * @param parameter {@link SpellCheckerParameter} type input.
+ * @param fsm       FsmMorphologicalAnalyzer type input.
+ * @param nGram     NGram type input.
+ * @param parameter SpellCheckerParameter type input.
  */
 ContextBasedSpellChecker::ContextBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
                                                    const SpellCheckerParameter &_parameter) : NGramSpellChecker(fsm,
@@ -20,11 +20,11 @@ ContextBasedSpellChecker::ContextBasedSpellChecker(const FsmMorphologicalAnalyze
 }
 
 /**
- * Another constructor of {@link ContextBasedSpellChecker} class which takes an {@link FsmMorphologicalAnalyzer} and
- * an {@link NGram} as inputs. Then, calls its super class {@link NGramSpellChecker} with given inputs.
+ * Another constructor of ContextBasedSpellChecker class which takes an FsmMorphologicalAnalyzer and
+ * an NGram as inputs. Then, calls its super class NGramSpellChecker with given inputs.
  *
- * @param fsm   {@link FsmMorphologicalAnalyzer} type input.
- * @param nGram {@link NGram} type input.
+ * @param fsm   FsmMorphologicalAnalyzer type input.
+ * @param nGram NGram type input.
  */
 ContextBasedSpellChecker::ContextBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram)
         : NGramSpellChecker(fsm, nGram) {
