@@ -49,7 +49,6 @@ NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<
 Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
     Word *word, *bestRoot, *previousRoot = nullptr, *root, *nextRoot;
     Candidate *bestCandidate;
-    FsmParseList fsmParses;
     double previousProbability, nextProbability, bestProbability;
     vector<Candidate *> candidates;
     auto *result = new Sentence();
