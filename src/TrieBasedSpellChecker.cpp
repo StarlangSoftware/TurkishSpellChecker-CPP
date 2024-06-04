@@ -107,6 +107,19 @@ vector<Candidate *> TrieBasedSpellChecker::candidateList(Word *word, Sentence *s
     return results;
 }
 
+/**
+ * Generates a set of candidates based on a given TrieCandidate.
+ * The generated candidates are created by applying a set of operations to
+ * the input TrieCandidate. The possible operations are:
+ * De-asciification: replacing certain ASCII characters with their non-ASCII counterparts.
+ * Substitution: replacing a single character with another character.
+ * Insertion: adding a single character to the string.
+ * Deletion: removing a single character from the string.
+ * Transposition: swapping the positions of two adjacent characters in the string.
+ *
+ * @param candidate the input TrieCandidate
+ * @return a list of candidate strings, each contained in a TrieCandidate object
+ */
 vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandidate *candidate) {
     vector<TrieCandidate *> candidates;
     string currentName = candidate->getName();
@@ -179,6 +192,12 @@ vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandid
     return candidates;
 }
 
+/**
+ * Searches the intermediate results array for the given candidate. The search is done based on name of the candidate.
+ * @param results Array to search for candidate
+ * @param candidate Candidate to be searched.
+ * @return Index of the candidate in the results array. If it does not exist, returns -1.
+ */
 int TrieBasedSpellChecker::searchCandidates(const vector<Candidate *>& results, TrieCandidate* candidate) {
     for (int i = 0; i < results.size(); i++){
         if (results[i]->getName() == candidate->getName()){

@@ -219,6 +219,13 @@ Word *NGramSpellChecker::checkAnalysisAndSetRootForWordAtIndex(Sentence *sentenc
     return nullptr;
 }
 
+/**
+ * Checks the morphological analysis of the given word. If there is no misspelling, it returns
+ * the longest root word of the possible analysis.
+ *
+ * @param word Word to be analyzed.
+ * @return If the word is misspelled, null; otherwise the longest root word of the possible analysis.
+ */
 Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string &word) {
     FsmParseList fsmParsesOfWord = fsm.morphologicalAnalysis(word);
     if (fsmParsesOfWord.size() != 0) {
@@ -239,6 +246,12 @@ Word *NGramSpellChecker::checkAnalysisAndSetRoot(const string &word) {
     return nullptr;
 }
 
+/**
+ * Returns the bi-gram probability P(word2 | word1) for the given bigram consisting of two words.
+ * @param word1 First word in bi-gram
+ * @param word2 Second word in bi-gram
+ * @return Bi-gram probability P(word2 | word1)
+ */
 double NGramSpellChecker::getProbability(const string &word1, const string &word2) const {
     return nGram->getProbability({word1, word2});
 }

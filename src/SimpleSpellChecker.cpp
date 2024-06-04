@@ -245,6 +245,13 @@ bool SimpleSpellChecker::forcedBackwardMergeCheck(Word* word, Sentence* result, 
     return false;
 }
 
+/**
+ * Returns the correct form of a given word by looking it up in the provided dictionary.
+ *
+ * @param wordName   the name of the word to look up in the dictionary
+ * @param dictionary the dictionary to use for looking up the word
+ * @return the correct form of the word, as stored in the dictionary, or null if the word is not found
+ */
 string SimpleSpellChecker::getCorrectForm(const string& wordName, const unordered_map<string, string>& dictionary) const{
     if (dictionary.contains(wordName)){
         return dictionary.at(wordName);
@@ -561,6 +568,11 @@ SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer &fsm, cons
     loadDictionaries();
 }
 
+/**
+ * Opens and returns a file reader of a given file name.
+ * @param fileName File to read
+ * @return File reader of the given file.
+ */
 ifstream SimpleSpellChecker::getInputStream(const string& fileName) {
     ifstream inputStream;
     if (parameter.getDomain().empty()){
