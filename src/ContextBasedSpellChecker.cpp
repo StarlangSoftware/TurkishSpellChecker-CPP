@@ -3,6 +3,7 @@
 //
 
 #include "ContextBasedSpellChecker.h"
+#include <StringUtils.h>
 
 /**
  * A constructor of ContextBasedSpellChecker class which takes a FsmMorphologicalAnalyzer, an NGram
@@ -10,7 +11,7 @@
  *
  * @param fsm       FsmMorphologicalAnalyzer type input.
  * @param nGram     NGram type input.
- * @param parameter SpellCheckerParameter type input.
+ * @param _parameter SpellCheckerParameter type input.
  */
 ContextBasedSpellChecker::ContextBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
                                                    const SpellCheckerParameter &_parameter) : NGramSpellChecker(fsm,
@@ -40,9 +41,9 @@ void ContextBasedSpellChecker::loadContextDictionaries() {
     string line;
     while (inputStream.good()){
         getline(inputStream, line);
-        vector<string> words = Word::split(line, "\t");
+        vector<string> words = StringUtils::split(line, "\t");
         string word = words[0];
-        vector<string> otherWords = Word::split(words[1], " ");
+        vector<string> otherWords = StringUtils::split(words[1], " ");
         contextList[word] = otherWords;
     }
     inputStream.close();

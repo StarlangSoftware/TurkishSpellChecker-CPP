@@ -14,7 +14,7 @@ private:
 public:
     SpellCheckerTrie();
 
-    void insert(const string &word);
+    void insert(const string &word) const;
 
     bool search(const string &word) const;
 

@@ -11,7 +11,7 @@
  *
  * @param fsm       FsmMorphologicalAnalyzer type input.
  * @param nGram     NGram type input.
- * @param parameter SpellCheckerParameter type input.
+ * @param _parameter SpellCheckerParameter type input.
  */
 TrieBasedSpellChecker::TrieBasedSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
                                              const SpellCheckerParameter &_parameter) : NGramSpellChecker(fsm, nGram,
@@ -68,6 +68,7 @@ void TrieBasedSpellChecker::prepareTrie() {
  * FsmParseList is 0, it then removes the ith item.
  *
  * @param word Word input.
+ * @param sentence Sentence for which candidate word list will be generated.
  * @return candidates ArrayList.
  */
 vector<Candidate *> TrieBasedSpellChecker::candidateList(Word *word, Sentence *sentence) {
@@ -120,7 +121,7 @@ vector<Candidate *> TrieBasedSpellChecker::candidateList(Word *word, Sentence *s
  * @param candidate the input TrieCandidate
  * @return a list of candidate strings, each contained in a TrieCandidate object
  */
-vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandidate *candidate) {
+vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandidate *candidate) const {
     vector<TrieCandidate *> candidates;
     string currentName = candidate->getName();
     string deasciifiedWord;

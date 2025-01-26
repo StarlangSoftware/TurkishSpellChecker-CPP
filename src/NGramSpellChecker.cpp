@@ -3,6 +3,7 @@
 //
 
 #include "NGramSpellChecker.h"
+#include "StringUtils.h"
 
 /**
  * A constructor of NGramSpellChecker class which takes a FsmMorphologicalAnalyzer and an NGram
@@ -11,6 +12,7 @@
  *
  * @param fsm   FsmMorphologicalAnalyzer type input.
  * @param nGram NGram type input.
+ * @param _parameter Spell checker parameter.
  */
 NGramSpellChecker::NGramSpellChecker(const FsmMorphologicalAnalyzer &fsm, NGram<string> *nGram,
                                      const SpellCheckerParameter &_parameter) : SimpleSpellChecker(fsm) {
@@ -142,7 +144,7 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
                 }
                 if (previousRoot != nullptr) {
                     if (candidate->getOperator() == Operator::SPLIT) {
-                        root = checkAnalysisAndSetRoot(Word::split(candidate->getName())[0]);
+                        root = checkAnalysisAndSetRoot(StringUtils::split(candidate->getName())[0]);
                     }
                     previousProbability = getProbability(previousRoot->getName(), root->getName());
                 } else {
@@ -150,7 +152,7 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
                 }
                 if (nextRoot != nullptr) {
                     if (candidate->getOperator() == Operator::SPLIT) {
-                        root = checkAnalysisAndSetRoot(Word::split(candidate->getName())[1]);
+                        root = checkAnalysisAndSetRoot(StringUtils::split(candidate->getName())[1]);
                     }
                     nextProbability = getProbability(root->getName(), nextRoot->getName());
                 } else {

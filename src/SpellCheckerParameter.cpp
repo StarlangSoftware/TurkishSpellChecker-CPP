@@ -15,7 +15,7 @@ SpellCheckerParameter::SpellCheckerParameter() = default;
 /**
  * Sets the threshold value used in calculating the n-gram probabilities.
  *
- * @param threshold the threshold for the spell checker
+ * @param _threshold the threshold for the spell checker
  */
 void SpellCheckerParameter::setThreshold(double _threshold) {
     this->threshold = _threshold;
@@ -26,7 +26,7 @@ void SpellCheckerParameter::setThreshold(double _threshold) {
  * @see SimpleSpellChecker#forcedDeDaSplitCheck(Word, Sentence)
  * @see SimpleSpellChecker#forcedQuestionSuffixSplitCheck(Word, Sentence) (Word, Sentence)
  *
- * @param deMiCheck a boolean indicating whether the De-Mi check should be enabled (true) or disabled (false)
+ * @param _suffixCheck a boolean indicating whether the De-Mi check should be enabled (true) or disabled (false)
  */
 void SpellCheckerParameter::setSuffixCheck(bool _suffixCheck) {
     this->suffixCheck = _suffixCheck;
@@ -35,7 +35,7 @@ void SpellCheckerParameter::setSuffixCheck(bool _suffixCheck) {
 /**
  * Enables or disables the root n-gram for the spell checker.
  *
- * @param rootNGram a boolean indicating whether the root n-gram should be enabled (true) or disabled (false)
+ * @param _rootNGram a boolean indicating whether the root n-gram should be enabled (true) or disabled (false)
  */
 void SpellCheckerParameter::setRootNGram(bool _rootNGram) {
     this->rootNGram = _rootNGram;
@@ -73,7 +73,7 @@ bool SpellCheckerParameter::isRootNGram() const {
 /**
  * Sets the minimum length of words viable for spell checking.
  *
- * @param minWordLength the minimum word length for the spell checker
+ * @param _minWordLength the minimum word length for the spell checker
  */
 void SpellCheckerParameter::setMinWordLength(int _minWordLength) {
     this->minWordLength = _minWordLength;

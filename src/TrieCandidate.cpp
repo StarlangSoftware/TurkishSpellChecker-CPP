@@ -7,9 +7,9 @@
 /**
  * Constructs a TrieCandidate object.
  *
- * @param word the candidate word
- * @param currentIndex the current index of the candidate word
- * @param currentPenalty the currentPenalty associated with the candidate word
+ * @param _word the candidate word
+ * @param _currentIndex the current index of the candidate word
+ * @param _currentPenalty the currentPenalty associated with the candidate word
  */
 TrieCandidate::TrieCandidate(const string& _word, int _currentIndex, double _currentPenalty) : Candidate(_word, Operator::TRIE_BASED){
     this->currentIndex = _currentIndex;

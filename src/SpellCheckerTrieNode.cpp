@@ -11,7 +11,7 @@ SpellCheckerTrieNode::SpellCheckerTrieNode() = default;
 
 /**
  * Returns the child SpellCheckerTrieNode with the given character as its value.
- * @param character The character value of the child SpellCheckerTrieNode.
+ * @param ch The character value of the child SpellCheckerTrieNode.
  * @return SpellCheckerTrieNode with the given character value.
  */
 SpellCheckerTrieNode *SpellCheckerTrieNode::getChild(const string& ch) const{

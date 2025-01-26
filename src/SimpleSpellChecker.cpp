@@ -5,6 +5,7 @@
 #include "SimpleSpellChecker.h"
 #include "Language/TurkishLanguage.h"
 #include <fstream>
+#include "StringUtils.h"
 
 const vector<string> SimpleSpellChecker::shortcuts = {"cc", "cm2", "cm", "gb", "ghz", "gr", "gram", "hz", "inc", "inch",
                                                       "inç", "kg", "kw", "kva", "litre", "lt", "m2", "m3", "mah", "mb",
@@ -33,7 +34,7 @@ const vector<string> SimpleSpellChecker::questionSuffixList = {"mi", "mı", "mu"
 
 /**
  * The generateCandidateList method takes a String as an input. Firstly, it creates a String consists of lowercase Turkish letters
- * and an vector candidates. Then, it loops i times where i ranges from 0 to the length of given word. It gets substring
+ * and a vector candidates. Then, it loops i times where i ranges from 0 to the length of given word. It gets substring
  * from 0 to ith index and concatenates it with substring from i+1 to the last index as a new String called deleted. Then, adds
  * this String to the candidates vector. Secondly, it loops j times where j ranges from 0 to length of
  * lowercase letters String and adds the jth character of this String between substring of given word from 0 to ith index
@@ -76,6 +77,7 @@ vector<Candidate*> SimpleSpellChecker::generateCandidateList(const string& word)
  * FsmParseList is 0, it then removes the ith item.
  *
  * @param word Word input.
+ * @param sentence Sentence for which candidate word list will be generated.
  * @return candidates vector.
  */
 vector<Candidate*> SimpleSpellChecker::candidateList(Word *word, Sentence* sentence){
@@ -191,14 +193,14 @@ void SimpleSpellChecker::loadDictionaries() {
     string line;
     while (inputStream.good()){
         getline(inputStream, line);
-        vector<string> items = Word::split(line);
+        vector<string> items = StringUtils::split(line);
         mergedWords.emplace(items[0] + " " + items[1], items[2]);
     }
     inputStream.close();
     inputStream = getInputStream("split.txt");
     while (inputStream.good()){
         getline(inputStream, line);
-        vector<string> items = Word::split(line);
+        vector<string> items = StringUtils::split(line);
         string result = items[1];
         for (int i = 2; i < items.size(); i++){
             result += " " + items[i];
@@ -379,7 +381,7 @@ vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
  * Splits a word into two parts, a key and a value, based on the first non-numeric/non-punctuation character.
  *
  * @param word the Word object to split
- * @return an {@link AbstractMap.SimpleEntry} object containing the key (numeric/punctuation characters) and the value (remaining characters)
+ * @return a pair object containing the key (numeric/punctuation characters) and the value (remaining characters)
  */
 pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
     pair<string, string> pair;
@@ -405,7 +407,7 @@ pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
  * @param result    the Sentence to add the split words to
  */
 void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result) const{
-    vector<string> words = Word::split(multiWord);
+    vector<string> words = StringUtils::split(multiWord);
     for (auto& word : words){
         result->addWord(new Word(word));
     }
@@ -467,7 +469,7 @@ bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
  * If the merge is needed, the word and its preceding word are replaced with their merged form in the given sentence.
  *
  * @param word         the Word to check for merge
- * @param sentence     the Sentence that the word belongs to
+ * @param result     the Sentence that the word belongs to
  * @param previousWord the preceding Word of the given Word
  * @return true if the word was merged, false otherwise
  */

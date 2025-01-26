@@ -14,7 +14,7 @@ private:
     vector<string> generatedWords;
     SpellCheckerTrie* trie;
     void prepareTrie();
-    vector<TrieCandidate*> generateTrieCandidates(TrieCandidate* candidate);
+    vector<TrieCandidate*> generateTrieCandidates(TrieCandidate* candidate) const;
     int searchCandidates(const vector<Candidate *>& results, TrieCandidate* candidate);
 public:
     TrieBasedSpellChecker(const FsmMorphologicalAnalyzer& fsm, NGram<string>* nGram, const SpellCheckerParameter& _parameter);

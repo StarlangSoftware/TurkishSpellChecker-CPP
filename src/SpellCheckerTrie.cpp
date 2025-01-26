@@ -16,7 +16,7 @@ SpellCheckerTrie::SpellCheckerTrie() {
  *
  * @param word The word to be inserted
  */
-void SpellCheckerTrie::insert(const string& word) {
+void SpellCheckerTrie::insert(const string& word) const {
     SpellCheckerTrieNode* currentNode = rootNode;
     for (int i = 0; i < Word::size(word); i++) {
         string ch = Word::charAt(word, i);
