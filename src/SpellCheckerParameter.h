@@ -23,11 +23,11 @@ public:
     void setRootNGram(bool _rootNGram);
     void setMinWordLength(int _minWordLength);
     void setDomain(const string& _domain);
-    double getThreshold() const;
-    bool isSuffixCheck() const;
-    bool isRootNGram() const;
-    int getMinWordLength() const;
-    string getDomain() const;
+    [[nodiscard]] double getThreshold() const;
+    [[nodiscard]] bool isSuffixCheck() const;
+    [[nodiscard]] bool isRootNGram() const;
+    [[nodiscard]] int getMinWordLength() const;
+    [[nodiscard]] string getDomain() const;
 };
 
 

@@ -17,13 +17,13 @@ private:
 public:
     SpellCheckerTrieNode();
 
-    SpellCheckerTrieNode *getChild(const string &ch) const;
+    [[nodiscard]] SpellCheckerTrieNode *getChild(const string &ch) const;
 
     void addChild(const string &ch, SpellCheckerTrieNode *child);
 
-    string childrenToString() const;
+    [[nodiscard]] string childrenToString() const;
 
-    bool isWord() const;
+    [[nodiscard]] bool isWord() const;
 
     void setIsWord(bool isWord);
 };

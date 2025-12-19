@@ -16,23 +16,23 @@ class SimpleSpellChecker : public SpellChecker {
 protected:
     FsmMorphologicalAnalyzer fsm;
     SpellCheckerParameter parameter;
-    bool forcedMisspellCheck(Word* word, Sentence* result) const;
-    bool forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) const;
-    bool forcedForwardMergeCheck(Word* word, Sentence* result, Word* nextWord) const;
+    bool forcedMisspellCheck(const Word* word, Sentence* result) const;
+    bool forcedBackwardMergeCheck(const Word* word, Sentence* result, const Word* previousWord) const;
+    bool forcedForwardMergeCheck(const Word* word, Sentence* result, const Word* nextWord) const;
     string getCorrectForm(const string& wordName, const unordered_map<string, string>& dictionary) const;
-    bool forcedSplitCheck(Word* word, Sentence* result) const;
-    bool forcedShortcutCheck(Word* word, Sentence* result) const;
-    bool forcedDeDaSplitCheck(Word* word, Sentence* result);
-    bool forcedSuffixMergeCheck(Word* word, Sentence* result, Word* previousWord);
-    bool forcedHyphenMergeCheck(Word* word, Sentence* result, Word* previousWord, Word* nextWord);
-    bool forcedQuestionSuffixSplitCheck(Word* word, Sentence* result);
-    bool forcedSuffixSplitCheck(Word* word, Sentence* result);
-    vector<Candidate*> mergedCandidatesList(Word* previousWord, Word* word, Word* nextWord);
-    vector<Candidate*> splitCandidatesList(Word* word);
+    bool forcedSplitCheck(const Word* word, Sentence* result) const;
+    bool forcedShortcutCheck(const Word* word, Sentence* result) const;
+    bool forcedDeDaSplitCheck(const Word* word, Sentence* result);
+    bool forcedSuffixMergeCheck(const Word* word, Sentence* result, const Word* previousWord);
+    bool forcedHyphenMergeCheck(const Word* word, Sentence* result, const Word* previousWord, const Word* nextWord);
+    bool forcedQuestionSuffixSplitCheck(const Word* word, Sentence* result);
+    bool forcedSuffixSplitCheck(const Word* word, Sentence* result);
+    vector<Candidate*> mergedCandidatesList(const Word* previousWord, const Word* word, const Word* nextWord);
+    vector<Candidate*> splitCandidatesList(const Word* word);
     void addSplitWords(const string& multiWord, Sentence* result) const;
     void loadDictionaries();
     virtual vector<Candidate*> candidateList(Word* word, Sentence* sentence);
-    ifstream getInputStream(const string& fileName);
+    ifstream getInputStream(const string& fileName) const;
 private:
     vector<Candidate*> generateCandidateList(const string& word) const;
     unordered_map<string, string> mergedWords;
@@ -40,7 +40,7 @@ private:
     static const vector<string> shortcuts;
     static const vector<string> conditionalShortcuts;
     static const vector<string> questionSuffixList;
-    pair<string, string> getSplitPair(Word* word) const;
+    pair<string, string> getSplitPair(const Word* word) const;
 public:
     explicit SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm);
     SimpleSpellChecker(const FsmMorphologicalAnalyzer& fsm, const SpellCheckerParameter& parameter);

@@ -194,7 +194,7 @@ Sentence *NGramSpellChecker::spellCheck(Sentence *sentence) {
  * @param index Index of the word
  * @return If the word is misspelled, null; otherwise the longest root word of the possible analyses.
  */
-Word *NGramSpellChecker::checkAnalysisAndSetRootForWordAtIndex(Sentence *sentence, int index) {
+Word *NGramSpellChecker::checkAnalysisAndSetRootForWordAtIndex(const Sentence *sentence, int index) {
     if (index < sentence->wordCount()) {
         string wordName = sentence->getWord(index)->getName();
         if ((regex_match(wordName, regex(".*\\d+.*")) && regex_match(wordName, regex(".*[a-zA-ZçöğüşıÇÖĞÜŞİ]+.*")) &&

@@ -199,7 +199,7 @@ vector<TrieCandidate *> TrieBasedSpellChecker::generateTrieCandidates(TrieCandid
  * @param candidate Candidate to be searched.
  * @return Index of the candidate in the results array. If it does not exist, returns -1.
  */
-int TrieBasedSpellChecker::searchCandidates(const vector<Candidate *>& results, TrieCandidate* candidate) {
+int TrieBasedSpellChecker::searchCandidates(const vector<Candidate *>& results, const TrieCandidate* candidate) {
     for (int i = 0; i < results.size(); i++){
         if (results[i]->getName() == candidate->getName()){
             return i;

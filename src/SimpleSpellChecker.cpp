@@ -218,7 +218,7 @@ void SimpleSpellChecker::loadDictionaries() {
  * @param result the Sentence that the word belongs to
  * @return true if the word was corrected, false otherwise
  */
-bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) const{
+bool SimpleSpellChecker::forcedMisspellCheck(const Word* word, Sentence* result) const{
     string forcedReplacement = fsm.getDictionary()->getCorrectForm(word->getName());
     if (!forcedReplacement.empty()){
         result->addWord(new Word(forcedReplacement));
@@ -236,7 +236,7 @@ bool SimpleSpellChecker::forcedMisspellCheck(Word* word, Sentence* result) const
  * @param previousWord the preceding Word of the given Word
  * @return true if the word was merged, false otherwise
  */
-bool SimpleSpellChecker::forcedBackwardMergeCheck(Word* word, Sentence* result, Word* previousWord) const{
+bool SimpleSpellChecker::forcedBackwardMergeCheck(const Word* word, Sentence* result, const Word* previousWord) const{
     if (previousWord != nullptr){
         string forcedReplacement = getCorrectForm(result->getWord(result->wordCount() - 1)->getName() + " " + word->getName(), mergedWords);
         if (!forcedReplacement.empty()) {
@@ -270,7 +270,7 @@ string SimpleSpellChecker::getCorrectForm(const string& wordName, const unordere
  * @param nextWord the next Word of the given Word
  * @return true if the word was merged, false otherwise
  */
-bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, Word *nextWord) const{
+bool SimpleSpellChecker::forcedForwardMergeCheck(const Word *word, Sentence *result, const Word *nextWord) const{
     if (nextWord != nullptr){
         string forcedReplacement = getCorrectForm(word->getName() + " " + nextWord->getName(), mergedWords);
         if (!forcedReplacement.empty()) {
@@ -289,7 +289,7 @@ bool SimpleSpellChecker::forcedForwardMergeCheck(Word *word, Sentence *result, W
  * @param result the Sentence that the word belongs to
  * @return true if the word was split, false otherwise
  */
-bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) const{
+bool SimpleSpellChecker::forcedSplitCheck(const Word* word, Sentence* result) const{
     string forcedReplacement = getCorrectForm(word->getName(), splitWords);
     if (!forcedReplacement.empty()){
         addSplitWords(forcedReplacement, result);
@@ -306,7 +306,7 @@ bool SimpleSpellChecker::forcedSplitCheck(Word* word, Sentence* result) const{
  * @param result the Sentence that the word belongs to
  * @return true if the word was split, false otherwise
  */
-bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result) const{
+bool SimpleSpellChecker::forcedShortcutCheck(const Word* word, Sentence* result) const{
     string shortcutRegex = "^(([1-9][0-9]*)|[0])(([.]|[,])[0-9]*)?(" + shortcuts[0];
     for (int i = 1; i < shortcuts.size(); i++){
         shortcutRegex += "|" + shortcuts[i];
@@ -334,7 +334,7 @@ bool SimpleSpellChecker::forcedShortcutCheck(Word* word, Sentence* result) const
  * @param nextWord     The next Word in the sentence.
  * @return A list of merged candidates.
  */
-vector<Candidate *> SimpleSpellChecker::mergedCandidatesList(Word *previousWord, Word *word, Word *nextWord) {
+vector<Candidate *> SimpleSpellChecker::mergedCandidatesList(const Word *previousWord, const Word *word, const Word *nextWord) {
     vector<Candidate*> mergedCandidates;
     Candidate* backwardMergeCandidate = nullptr;
     Candidate* forwardMergeCandidate = nullptr;
@@ -363,7 +363,7 @@ vector<Candidate *> SimpleSpellChecker::mergedCandidatesList(Word *previousWord,
  * @param word The Word currently being checked.
  * @return A list of split candidates.
  */
-vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
+vector<Candidate *> SimpleSpellChecker::splitCandidatesList(const Word *word) {
     vector<Candidate*> splitCandidates;
     for (int i = 4; i < Word::size(word->getName()) - 3; i++) {
         string firstPart = Word::substring(word->getName(), 0, i);
@@ -383,7 +383,7 @@ vector<Candidate *> SimpleSpellChecker::splitCandidatesList(Word *word) {
  * @param word the Word object to split
  * @return a pair object containing the key (numeric/punctuation characters) and the value (remaining characters)
  */
-pair<string, string> SimpleSpellChecker::getSplitPair(Word *word) const{
+pair<string, string> SimpleSpellChecker::getSplitPair(const Word *word) const{
     pair<string, string> pair;
     string first;
     int j;
@@ -421,7 +421,7 @@ void SimpleSpellChecker::addSplitWords(const string& multiWord, Sentence *result
  * @param result the Sentence that the word belongs to
  * @return true if the word was split, false otherwise
  */
-bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
+bool SimpleSpellChecker::forcedDeDaSplitCheck(const Word *word, Sentence *result) {
     string wordName = word->getName();
     string capitalizedWordName = Word::toCapital(wordName);
     TxtWord* txtWord = nullptr;
@@ -473,7 +473,7 @@ bool SimpleSpellChecker::forcedDeDaSplitCheck(Word *word, Sentence *result) {
  * @param previousWord the preceding Word of the given Word
  * @return true if the word was merged, false otherwise
  */
-bool SimpleSpellChecker::forcedSuffixMergeCheck(Word *word, Sentence *result, Word *previousWord) {
+bool SimpleSpellChecker::forcedSuffixMergeCheck(const Word *word, Sentence *result, const Word *previousWord) {
     vector<string> liList = {"li", "lı", "lu", "lü"};
     vector<string> likList = {"lik", "lık", "luk", "lük"};
     if (find(liList.begin(), liList.end(), word->getName()) != liList.end() ||
@@ -511,7 +511,7 @@ bool SimpleSpellChecker::forcedSuffixMergeCheck(Word *word, Sentence *result, Wo
  * @param nextWord     the Word after current word
  * @return true if merge is valid, false otherwise
  */
-bool SimpleSpellChecker::forcedHyphenMergeCheck(Word *word, Sentence *result, Word *previousWord, Word *nextWord) {
+bool SimpleSpellChecker::forcedHyphenMergeCheck(const Word *word, Sentence *result, const Word *previousWord, const Word *nextWord) {
     if (word->getName() == "-" || word->getName() == "–" || word->getName() == "—") {
         if (previousWord != nullptr && nextWord != nullptr && regex_search(previousWord->getName(), regex("^[a-zA-ZçöğüşıÇÖĞÜŞİ]+$"))
             && regex_search(nextWord->getName(), regex("^[a-zA-ZçöğüşıÇÖĞÜŞİ]+$"))) {
@@ -534,7 +534,7 @@ bool SimpleSpellChecker::forcedHyphenMergeCheck(Word *word, Sentence *result, Wo
  * @param result the Sentence that the word belongs to
  * @return true if split is valid, false otherwise
  */
-bool SimpleSpellChecker::forcedQuestionSuffixSplitCheck(Word *word, Sentence *result) {
+bool SimpleSpellChecker::forcedQuestionSuffixSplitCheck(const Word *word, Sentence *result) {
     string wordName = word->getName();
     if (fsm.morphologicalAnalysis(wordName).size() > 0){
         return false;
@@ -575,7 +575,7 @@ SimpleSpellChecker::SimpleSpellChecker(const FsmMorphologicalAnalyzer &fsm, cons
  * @param fileName File to read
  * @return File reader of the given file.
  */
-ifstream SimpleSpellChecker::getInputStream(const string& fileName) {
+ifstream SimpleSpellChecker::getInputStream(const string& fileName) const {
     ifstream inputStream;
     if (parameter.getDomain().empty()){
         inputStream.open(fileName, ifstream::in);
@@ -593,7 +593,7 @@ ifstream SimpleSpellChecker::getInputStream(const string& fileName) {
  * @param result the Sentence that the word belongs to
  * @return true if the split is successful, false otherwise.
  */
-bool SimpleSpellChecker::forcedSuffixSplitCheck(Word *word, Sentence *result) {
+bool SimpleSpellChecker::forcedSuffixSplitCheck(const Word *word, Sentence *result) {
     string wordName = word->getName();
     if (fsm.morphologicalAnalysis(wordName).size() > 0){
         return false;

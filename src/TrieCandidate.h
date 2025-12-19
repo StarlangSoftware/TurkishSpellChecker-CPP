@@ -14,8 +14,8 @@ private:
     double currentPenalty;
 public:
     TrieCandidate(const string& _word, int _currentIndex, double _currentPenalty);
-    int getCurrentIndex() const;
-    double getCurrentPenalty() const;
+    [[nodiscard]] int getCurrentIndex() const;
+    [[nodiscard]] double getCurrentPenalty() const;
     void nextIndex();
 };
 

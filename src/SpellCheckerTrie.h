@@ -16,11 +16,11 @@ public:
 
     void insert(const string &word) const;
 
-    bool search(const string &word) const;
+    [[nodiscard]] bool search(const string &word) const;
 
-    bool startsWith(const string &prefix) const;
+    [[nodiscard]] bool startsWith(const string &prefix) const;
 
-    SpellCheckerTrieNode *getTrieNode(const string &word) const;
+    [[nodiscard]] SpellCheckerTrieNode *getTrieNode(const string &word) const;
 };
 
 #endif //SPELLCHECKER_SPELLCHECKERTRIE_H
